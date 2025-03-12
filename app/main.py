@@ -1,3 +1,7 @@
+import os
+from dotenv import load_dotenv
+print(os.getenv("SUPABASE_KEY"))
+
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
