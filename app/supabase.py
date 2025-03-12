@@ -5,7 +5,7 @@ from fastapi import Request, HTTPException
 
 # Load environment variables from .env file
 load_dotenv()
-
+print(os.getenv("SUPABASE_KEY"))
 # Supabase configuration
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")

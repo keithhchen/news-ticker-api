@@ -7,6 +7,7 @@ from fastapi import Request, HTTPException
 
 # Load environment variables from .env file
 load_dotenv()
+print(os.getenv("OPENAI_API_KEY"))
 
 # Initialize LLMs using environment variables
 gpt4o = ChatOpenAI(
