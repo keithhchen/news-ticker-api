@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request, HTTPException, Depends, BackgroundTasks
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from typing import Optional, Dict
@@ -8,6 +8,7 @@ from tempfile import NamedTemporaryFile
 from langchain_core.runnables.graph import MermaidDrawMethod
 
 from app.graph.workflow import create_workflow
+from app.supabase import get_authenticated_user
 
 router = APIRouter(
     prefix="/graph",
@@ -18,15 +19,15 @@ class GraphInput(BaseModel):
     input_text: str
     parameters: Optional[Dict] = None
 
-async def cleanup_file(path: str):
-    """Background task to clean up the temporary file after sending"""
+def cleanup_file(path: str):
+    """Background task to clean up the temporary file"""
     try:
         os.unlink(path)
     except Exception as e:
         print(f"Error cleaning up file {path}: {e}")
 
 @router.get("/draw")
-async def draw_graph():
+async def draw_graph(background_tasks: BackgroundTasks):
     """Generate and return a visualization of the workflow graph"""
     # Create a temporary file
     temp = NamedTemporaryFile(delete=False, suffix='.png')
@@ -40,16 +41,18 @@ async def draw_graph():
         output_file_path=filename
     )
 
-    # Return the file and clean up afterwards
+    # Add cleanup to background tasks
+    background_tasks.add_task(cleanup_file, filename)
+
+    # Return the file
     return FileResponse(
         filename,
         media_type="image/png",
-        filename="workflow_graph.png",
-        background=cleanup_file(filename)
+        filename="workflow_graph.png"
     )
 
 @router.post("/process")
-async def process_with_graph(input_data: GraphInput):
+async def process_with_graph(input_data: GraphInput, user=Depends(get_authenticated_user)):
     # Create a fresh state dictionary for each request
     initial_state = {
         "input_text": input_data.input_text,
