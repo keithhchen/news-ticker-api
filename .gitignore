@@ -11,6 +11,3 @@ __pycache__/
 # IDE
 .vscode/
 .idea/
-
-# Project specific
-app/config.py 
