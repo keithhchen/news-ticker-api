@@ -1,14 +1,20 @@
 from pydantic import BaseModel
-from typing import Optional, List
+from typing import Optional, Dict
 
 class GraphInput(BaseModel):
     input_text: str
-    parameters: Optional[dict] = None
+    parameters: Optional[Dict] = None
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
-                "input_text": "Sample input",
-                "parameters": {"param1": "value1"}
+                "input_text": "Sample input text for analysis",
+                "parameters": {"temperature": 0}
             }
-        } 
+        }
+
+class GraphOutput(BaseModel):
+    analysis: str
+    sentiment: str
+    summary: str
+    final_report: str 

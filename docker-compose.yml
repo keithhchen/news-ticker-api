@@ -7,5 +7,6 @@ services:
       - "8000:8000"
     volumes:
       - .:/app
+      - .env:/app/.env
     environment:
       - PYTHONPATH=/app
