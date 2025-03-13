@@ -52,7 +52,7 @@ async def draw_graph(background_tasks: BackgroundTasks):
     )
 
 @router.post("/process")
-async def process_with_graph(input_data: GraphInput, user=Depends(get_authenticated_user)):
+async def process_with_graph(input_data: GraphInput):
     # Create a fresh state dictionary for each request
     initial_state = {
         "input_text": input_data.input_text,
