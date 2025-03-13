@@ -9,6 +9,9 @@ from langchain_core.runnables.graph import MermaidDrawMethod
 
 from app.graph.workflow import create_workflow
 from app.supabase import get_authenticated_user
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+from app.graph.workflow import create_financial_analysis_graph
 
 router = APIRouter(
     prefix="/graph",
@@ -65,4 +68,21 @@ async def process_with_graph(input_data: GraphInput, user=Depends(get_authentica
     # Create a new workflow instance for each request
     graph = create_workflow()
     result = graph.invoke(initial_state)
-    return {"result": result} 
+    return {"result": result}
+
+
+class NewsAnalysisRequest(BaseModel):
+    news_content: str
+
+@router.post("/financial-analysis")
+async def analyze_financial_news(request: NewsAnalysisRequest):
+    try:
+        workflow = create_financial_analysis_graph()
+        result = await workflow.ainvoke({"input_text": request.news_content})
+        return {
+            "context_analysis": result["context_analysis"],
+            "analyst_analysis": result["analyst_analysis"],
+            "wb_report": result["wb_report"]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

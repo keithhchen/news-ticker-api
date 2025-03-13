@@ -2,12 +2,39 @@ from typing import TypedDict, Annotated, TypeVar
 import operator
 from langchain_core.runnables import RunnableLambda
 from app.config import gpt4o, deepseek
+'''
 from .prompts import (
     ANALYSIS_PROMPT,
     SENTIMENT_PROMPT,
     SUMMARY_PROMPT,
     FINAL_PROMPT
 )
+'''
+from typing import Dict, Any
+from langchain_core.runnables import RunnableConfig
+from app.graph.prompts import CONTEXT_PROMPT, ANALYST_PROMPT, WB_PROMPT
+
+async def context_analysis(data: Dict[str, Any], config: RunnableConfig) -> Dict[str, Any]:
+    """上下文分析节点"""
+    response = await CONTEXT_PROMPT.ainvoke({"input_text": data["input_text"]}, config)
+    return {"context_analysis": response.content}
+
+async def analyst_analysis(data: Dict[str, Any], config: RunnableConfig) -> Dict[str, Any]:
+    """分析师深度分析节点"""
+    response = await ANALYST_PROMPT.ainvoke({
+        "input_text": data["input_text"],
+        "context_analysis": data["context_analysis"]
+    }, config)
+    return {"analyst_analysis": response.content}
+
+async def wb_generation(data: Dict[str, Any], config: RunnableConfig) -> Dict[str, Any]:
+    """研报生成节点"""
+    response = await WB_PROMPT.ainvoke({
+        "input_text": data["input_text"],
+        "context_analysis": data["context_analysis"],
+        "analyst_analysis": data["analyst_analysis"]
+    }, config)
+    return {"wb_report": response.content}
 
 T = TypeVar('T')
 
@@ -55,4 +82,4 @@ def create_node_functions():
         "analyze_sentiment": RunnableLambda(analyze_sentiment),
         "summarize": RunnableLambda(summarize),
         "compile": RunnableLambda(compile_report)
-    } 
+    }
