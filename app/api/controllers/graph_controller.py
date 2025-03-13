@@ -54,12 +54,21 @@ async def draw_graph(background_tasks: BackgroundTasks):
 @router.post("/process")
 async def process_with_graph(input_data: GraphInput):
     # Create a fresh state dictionary for each request
+    """
     initial_state = {
         "input_text": input_data.input_text,
         "analysis": [],
         "sentiment": [],
         "summary": [],
         "final_report": []
+    }
+    """
+    initial_state = {
+        "news_input": input_data.input_text,
+        "ticker": input_data.parameters.get("ticker", ""),  # 从 parameters 中获取 ticker
+        "context": [],
+        "analyst": [],
+        "warren_buffett": []
     }
     
     # Create a new workflow instance for each request
