@@ -66,8 +66,12 @@ async def process_with_graph(input_data: GraphInput):
     initial_state = {
         "news_input": input_data.input_text,
         "ticker": input_data.parameters.get("ticker", ""),  # 从 parameters 中获取 ticker
-        "context": [],
-        "analyst": [],
+        "context_time_output": [],
+        "context_space_output": [],
+        "analyst_macro_output": [],
+        "analyst_industry_output": [],
+        "analyst_company_output": [],
+        "analyst_trade_output": [],
         "warren_buffett": []
     }
     

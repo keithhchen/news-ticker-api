@@ -26,82 +26,181 @@ FINAL_PROMPT = ChatPromptTemplate.from_messages([
 ]) 
 """
 
-CONTEXT_PROMPT = ChatPromptTemplate.from_messages([
-    ("system", "你是一个专业的新闻分析师，根据 News_input，你需要补充多个信息维度."),
+# CONTEXT_PROMPT = ChatPromptTemplate.from_messages([
+#    ("system", "你是一个专业的新闻分析师，根据 News_input，你需要补充多个信息维度."),
+#    ("user", """
+#    News_input: {news_input}
+#    补充的信息维度需要包括：
+#    1、时间维度：
+#      - 如果是数据新闻，请补充事件发生的时间点，及数据在时间轴上的变化趋势；
+#      - 如果是调查性报道，请补充事件的起源、发展和影响；
+#      - 如果是分析性报道，请补充新闻事件的背景、原因和可能的影响；
+#      - 如果是特写报道，请补充报道对象，如特定人物、地点或事件的时间维度信息；
+#      - 如果是背景报道，请补充事件的历史背景、相关政策的演变等；
+#      - 如果是预测性报道，请补充未来可能发生的事件。
+#    2、空间维度：
+#      - 补充可能涉及的人物，包括具体个人和群体，即 who；
+#     - 补充可能受影响的行业，即 Industry；
+#      - 补充可能相关的地点，即 where；
+#      - 补充可能影响的经济因素，即 what；
+#      - 补充可能产生影响的机制，即 how。
+#
+#    3. 市场反应维度:
+#      - 补充过去该新闻发布后，市场（股市、债市、汇率等）如何反应
+#      - 补充该新闻是否引发过短期或长期市场波动？
+#
+#    4. 情绪分析维度：
+#      - 补充过去该新闻是否引发市场情绪（恐慌、乐观、谨慎等）；
+#      - 补充相关机构或市场参与者的观点。
+#
+#    5. 政策与监管维度：
+#      - 补充该新闻涉及的政府或监管政策是否有影响？
+#      - 补充该新闻是否影响相关法律法规调整？
+#
+#    6. 竞争格局维度：
+#      - 补充该新闻是否影响某行业的竞争格局？
+#      - 补充该新闻是否可能引发并购、整合等市场行为？
+#
+#    7. 资金流向维度：
+#      - 补充该新闻可能影响的资金流向，如外资流入/流出、行业投资趋势？
+#    请根据以上补充信息，请输出：
+#    1、News_input 原文
+#    2、各个信息维度的补充信息
+#    """)
+#])
+
+CONTEXT_TIME_PROMPT = ChatPromptTemplate.from_messages([
+    ("system", "你是一个专业的新闻分析师，根据 News_input，你需要补充时间维度."),
     ("user", """
     News_input: {news_input}
-    补充的信息维度需要包括：
-    1、时间维度：
+    补充的信息需要包括：
       - 如果是数据新闻，请补充事件发生的时间点，及数据在时间轴上的变化趋势；
       - 如果是调查性报道，请补充事件的起源、发展和影响；
       - 如果是分析性报道，请补充新闻事件的背景、原因和可能的影响；
       - 如果是特写报道，请补充报道对象，如特定人物、地点或事件的时间维度信息；
       - 如果是背景报道，请补充事件的历史背景、相关政策的演变等；
       - 如果是预测性报道，请补充未来可能发生的事件。
-    2、空间维度：
+    输出补充的信息
+    """)
+])
+
+CONTEXT_SPACE_PROMPT = ChatPromptTemplate.from_messages([
+    ("system", "你是一个专业的新闻分析师，根据 News_input，你需要补充空间维度."),
+    ("user", """
+    News_input: {news_input}
+    补充的信息需要包括：
       - 补充可能涉及的人物，包括具体个人和群体，即 who；
       - 补充可能受影响的行业，即 Industry；
       - 补充可能相关的地点，即 where；
       - 补充可能影响的经济因素，即 what；
       - 补充可能产生影响的机制，即 how。
-
-    3. 市场反应维度:
-      - 补充过去该新闻发布后，市场（股市、债市、汇率等）如何反应
-      - 补充该新闻是否引发过短期或长期市场波动？
-
-    4. 情绪分析维度：
-      - 补充过去该新闻是否引发市场情绪（恐慌、乐观、谨慎等）；
-      - 补充相关机构或市场参与者的观点。
-
-    5. 政策与监管维度：
-      - 补充该新闻涉及的政府或监管政策是否有影响？
-      - 补充该新闻是否影响相关法律法规调整？
-
-    6. 竞争格局维度：
-      - 补充该新闻是否影响某行业的竞争格局？
-      - 补充该新闻是否可能引发并购、整合等市场行为？
-
-    7. 资金流向维度：
-      - 补充该新闻可能影响的资金流向，如外资流入/流出、行业投资趋势？
-    请根据以上补充信息，请输出：
-    1、News_input 原文
-    2、各个信息维度的补充信息
+    输出补充的信息
     """)
 ])
 
-ANALYST_PROMPT = ChatPromptTemplate.from_messages([
-    ("system", "你是一个专业的股票分析师，根据 Stock 和 Context，你需要对对应的上市公司进行投资分析."),
+
+
+
+# ANALYST_PROMPT = ChatPromptTemplate.from_messages([
+#     ("system", "你是一个专业的股票分析师，根据 Stock 和 Context，你需要对对应的上市公司进行投资分析."),
+#     ("user", """
+#     Stock: {ticker}
+#     Context: {context_output}
+#     进行以下分析：
+#     1、宏观维度：
+#       - 分析哪些宏观经济因素对公司可能产生影响，并在 Context 中寻找是否有这些因素，首先判断与 Stock 是否相关，如果相关，再判断是利多还是利空；
+#       - 分析哪些资本市场数据、监管政策可能对公司可能产生影响，并在 Context 中寻找是否有这些因素，首先判断与 Stock 是否相关，如果相关，再判断是利多还是利空；
+#     2、行业维度：
+#       - 使用五力模型等分析工具分析哪些因素可能对公司产生影响，并在 Context 中寻找是否有这些因素，首先判断与 Stock 是否相关，如果相关，再判断是利多还是利空；
+#     3、公司维度：
+#       - 在公司经营层面，分析哪些因素可能对公司产生影响，包括不限于公司的供应链、客户、竞争对手，公司的管理层，公司的融资手段，公司的资本市场动作，公司的财务数据等，
+#       并在 Context 中寻找是否有这些因素，首先判断与 Stock 是否相关，如果相关，再判断是利多还是利空；
+#     4、交易维度：
+#       - 在交易层面，分析哪些因素，包括不限于技术指标、情绪指标可能对公司产生影响，并在 Context 中寻找是否有这些因素，首先判断与 Stock 是否相关，如果相关，再判断是利多还是利空；
+#
+#     完成以上分析之后，输出结论，输出的格式例子如下：
+#     {{
+#       "宏观因素": 无关，推理过程；
+#       "行业因素": 利空，推理过程；
+#       "公司因素": 利多，推理过程；
+#       "交易因素": 利空，推理过程；
+#     }}
+#
+#     """)
+# ])
+
+ANALYST_MACRO_PROMPT = ChatPromptTemplate.from_messages([
+    ("system", "你是一个专业的宏观股票分析师，根据 Stock, Context_time 以及 Context_space, 你需要对对应的上市公司进行宏观维度投资分析."),
     ("user", """
     Stock: {ticker}
-    Context: {context_output}
+    Context_time: {context_time_output}
+    Context_space: {context_space_output}
     进行以下分析：
-    1、宏观维度：
-      - 分析哪些宏观经济因素对公司可能产生影响，并在 Context 中寻找是否有这些因素，首先判断与 Stock 是否相关，如果相关，再判断是利多还是利空；
-      - 分析哪些资本市场数据、监管政策可能对公司可能产生影响，并在 Context 中寻找是否有这些因素，首先判断与 Stock 是否相关，如果相关，再判断是利多还是利空；
-    2、行业维度：
-      - 使用五力模型等分析工具分析哪些因素可能对公司产生影响，并在 Context 中寻找是否有这些因素，首先判断与 Stock 是否相关，如果相关，再判断是利多还是利空；
-    3、公司维度：
-      - 在公司经营层面，分析哪些因素可能对公司产生影响，包括不限于公司的供应链、客户、竞争对手，公司的管理层，公司的融资手段，公司的资本市场动作，公司的财务数据等，
-      并在 Context 中寻找是否有这些因素，首先判断与 Stock 是否相关，如果相关，再判断是利多还是利空；
-    4、交易维度：
-      - 在交易层面，分析哪些因素，包括不限于技术指标、情绪指标可能对公司产生影响，并在 Context 中寻找是否有这些因素，首先判断与 Stock 是否相关，如果相关，再判断是利多还是利空；
-
+        - 分析哪些宏观经济因素对公司可能产生影响，并在 Context 中寻找是否有这些因素，首先判断与 Stock 是否相关，如果相关，再判断是利多还是利空；
+        - 分析哪些资本市场数据、监管政策可能对公司可能产生影响，并在 Context 中寻找是否有这些因素，首先判断与 Stock 是否相关，如果相关，再判断是利多还是利空；
     完成以上分析之后，输出结论，输出的格式例子如下：
     {{
-      "宏观因素": 无关，推理过程；
-      "行业因素": 利空，推理过程；
-      "公司因素": 利多，推理过程；
-      "交易因素": 利空，推理过程；
+      "宏观因素": 利空，推理过程；
     }}
-
     """)
 ])
+
+ANALYST_INDUSTRY_PROMPT = ChatPromptTemplate.from_messages([
+    ("system", "你是一个专业的行业股票分析师，根据 Stock, Context_time 以及 Context_space, 你需要对对应的上市公司进行行业维度投资分析."),
+    ("user", """
+    Stock: {ticker}
+    Context_time: {context_time_output}
+    Context_space: {context_space_output}
+    进行以下分析：
+        - 使用五力模型等分析工具分析哪些因素可能对公司产生影响，并在 Context 中寻找是否有这些因素，首先判断与 Stock 是否相关，如果相关，再判断是利多还是利空；
+    完成以上分析之后，输出结论，输出的格式例子如下：
+    {{
+      "行业因素": 利空，推理过程；
+    }}
+    """)
+])
+
+ANALYST_COMPANY_PROMPT = ChatPromptTemplate.from_messages([
+    ("system", "你是一个专业的公司股票分析师，根据 Stock, Context_time 以及 Context_space, 你需要对对应的上市公司进行公司维度投资分析."),
+    ("user", """
+    Stock: {ticker}
+    Context_time: {context_time_output}
+    Context_space: {context_space_output}
+    进行以下分析：
+        - 在公司经营层面，分析哪些因素可能对公司产生影响，包括不限于公司的供应链、客户、竞争对手，公司的管理层，公司的融资手段，公司的资本市场动作，公司的财务数据等，
+        并在 Context 中寻找是否有这些因素，首先判断与 Stock 是否相关，如果相关，再判断是利多还是利空；
+    完成以上分析之后，输出结论，输出的格式例子如下：
+    {{
+      "公司因素": 利多，推理过程；
+    }}
+    """)
+])
+
+ANALYST_TRADING_PROMPT = ChatPromptTemplate.from_messages([
+    ("system", "你是一个专业的交易股票分析师，根据 Stock, Context_time 以及 Context_space, 你需要对对应的上市公司进行交易维度投资分析."),
+    ("user", """
+    Stock: {ticker}
+    Context_time: {context_time_output}
+    Context_space: {context_space_output}
+    进行以下分析：
+        - 在交易层面，分析哪些因素，包括不限于技术指标、情绪指标可能对公司产生影响，并在 Context 中寻找是否有这些因素，首先判断与 Stock 是否相关，如果相关，再判断是利多还是利空；
+    完成以上分析之后，输出结论，输出的格式例子如下：
+    {{
+      "交易因素": 利空，推理过程；
+    }}
+    """)
+])
+
 
 WARREN_BUFFETT_PROMPT = ChatPromptTemplate.from_messages([
     ("system", "你是沃伦·巴菲特，你的投资风格长期以来秉持价值投资理念，专注于购买具有长期竞争优势且被市场低估的公司股票。针对四个投资维度：宏观、行业、公司、交易，你会根据其对投资决策的影响程度，给予不同的权重。"),
     ("user", """
-    Context: {context_output}
-    Analyst: {analysts_output}
+    Context_time: {context_time_output}
+    Context_space: {context_space_output}
+    Analyst_macro: {analyst_macro_output}
+    Analyst_industry: {analyst_industry_output}
+    Analyst_company: {analyst_company_output}
+    Analyst_trading: {analyst_trading_output}
     Stock: {ticker}
     
     1. 公司层面：权重 50%
@@ -124,7 +223,9 @@ WARREN_BUFFETT_PROMPT = ChatPromptTemplate.from_messages([
          summarized, your investment decision is based on comprehensive analysis of the company's basic information, while also considering the industry characteristics, moderately focusing on the macroeconomic factors, and finally the investment strategy.
 
 
-    基于 Context，结合 Analyst 的初步判断，你需要判断对 Stock 的影响，并得出看多、看空或者无关的结论，结论中应该包含相应的概率以及推理过程，例如：
+    基于 Context_time, Context_space，
+    结合 Analyst_macro, Analyst_industry, Analyst_company, Analyst_trading 的初步判断，
+    你需要判断对 Stock 的影响，并得出看多、看空或者无关的结论，结论中应该包含相应的概率以及推理过程，例如：
 
     {{
       "利多": 0.8,
