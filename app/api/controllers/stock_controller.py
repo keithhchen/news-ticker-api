@@ -92,7 +92,8 @@ class NewsStockRequest(BaseModel):
     news_id: str
     stock_id: int
 
-@router.post("/news-and-stock", dependencies=[Depends(get_authenticated_user)])
+# @router.post("/news-and-stock", dependencies=[Depends(get_authenticated_user)])
+@router.post("/news-and-stock")
 async def get_news_and_stock(
     request: NewsStockRequest,
 ):
