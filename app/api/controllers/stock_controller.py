@@ -1,9 +1,14 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Response, Request
 import aiohttp
 from typing import Optional
 from app.supabase import supabase, get_authenticated_user
 from pydantic import BaseModel
 import asyncio
+import logging
+from .graph_controller import process_with_graph, GraphInput
+from uuid import UUID
+
+logger = logging.getLogger("uvicorn")
 
 router = APIRouter(
     prefix="/stock",
@@ -54,6 +59,7 @@ async def get_stock_info(ticker: str) -> dict:
                 "timestamp": data[-3] + " " + data[-2] if len(data) > 30 else None
             }
 
+# @router.get("/info", dependencies=[Depends(get_authenticated_user)])
 @router.get("/info")
 async def get_info(
     id: Optional[str] = None,
@@ -74,8 +80,8 @@ async def get_info(
     try:
         stock_info = await get_stock_info(ticker)
         return {
-            "ticker": ticker,
-            "data": stock_info
+            "info": ticker,
+            "real_time_data": stock_info
         }
     except HTTPException as e:
         raise e
@@ -86,10 +92,9 @@ class NewsStockRequest(BaseModel):
     news_id: str
     stock_id: int
 
-@router.post("/news-and-stock")
+@router.post("/news-and-stock", dependencies=[Depends(get_authenticated_user)])
 async def get_news_and_stock(
     request: NewsStockRequest,
-    user=Depends(get_authenticated_user)
 ):
     """Get both news and stock information by their IDs"""
     
@@ -118,12 +123,20 @@ async def get_news_and_stock(
     if isinstance(stock_data, Exception):
         raise HTTPException(status_code=500, detail=f"Failed to fetch stock: {str(stock_data)}")
     
-    stock_info = await get_stock_info(stock_data["ticker"])
+    stock_real_time_data = await get_stock_info(stock_data["ticker"])
+            
+    graph_input = GraphInput(
+        input_text=f"""title: {news_data["title"]}, summary: {news_data["summary"]}, source: {news_data["source"]}, published_at: {news_data["published_at"]}""",
+        ticker=f'{stock_data["ticker"]} {stock_data["name"]}, current price: {stock_real_time_data["current"]}, volume: {stock_real_time_data["volume"]}'
+    )
+    logger.info(graph_input)
+    graph_result = await process_with_graph(graph_input)
     
     return {
         "news": news_data,
         "stock": {
             "info": stock_data,
-            "real_time_data": stock_info
-        }
+            "real_time_data": stock_real_time_data
+        },
+        "analysis": graph_result.get("result")  # Use .get() to safely handle None
     } 

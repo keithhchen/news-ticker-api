@@ -8,13 +8,6 @@ def create_workflow():
     # Add nodes
     for name, node in nodes.items():
         workflow.add_node(name, node)
-
-    # Define parallel execution paths
-    """
-    workflow.set_entry_point("analyze")
-    workflow.add_edge("analyze", "analyze_sentiment")
-    workflow.add_edge("analyze", "summarize")
-    """
     
     # Define a chained execution path
     workflow.set_entry_point("start")

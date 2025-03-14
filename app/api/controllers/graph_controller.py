@@ -2,13 +2,15 @@ from fastapi import APIRouter, Request, HTTPException, Depends, BackgroundTasks
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from typing import Optional, Dict
-import operator
 import os
 from tempfile import NamedTemporaryFile
 from langchain_core.runnables.graph import MermaidDrawMethod
+import logging 
 
 from app.graph.workflow import create_workflow
 from app.supabase import get_authenticated_user
+
+logger = logging.getLogger("uvicorn")
 
 router = APIRouter(
     prefix="/graph",
@@ -68,5 +70,8 @@ async def process_with_graph(input_data: GraphInput):
     
     # Create a new workflow instance for each request
     graph = create_workflow()
-    result = graph.invoke(initial_state)
-    return {"result": result} 
+    # result = graph.invoke(initial_state)
+    for chunk in graph.stream(input=initial_state, stream_mode="custom"):
+        logger.info(chunk)
+    return 2
+    # return {"result": result} 

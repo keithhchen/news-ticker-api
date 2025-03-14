@@ -1,5 +1,5 @@
+from langgraph.types import StreamWriter
 from typing import TypedDict, Annotated, TypeVar
-import operator
 import logging
 from langchain_core.runnables import RunnableLambda
 from app.config import gpt4o, deepseek
@@ -42,21 +42,21 @@ def create_node_functions():
     warren_buffett_chain = WARREN_BUFFETT_PROMPT | deepseek
     # final_chain = FINAL_PROMPT | gpt4o
 
-    def start(state: State) -> State:
+    def start(state: State, writer: StreamWriter):
+        writer({"node_start": "开始"})
         return state
 
-    def context_time(state: State):
+    def context_time(state: State, writer: StreamWriter):
         output = context_time_chain.invoke({"news_input": state["news_input"]}).content
         return {
             "context_time_output": output
         }
-    def context_space(state: State):
+    def context_space(state: State, writer: StreamWriter):
         output = context_space_chain.invoke({"news_input": state["news_input"]}).content
         return {
             "context_space_output": output
         }
     def analyst_macro(state: State):
-        logger.info("starting analyst_macro")
         output = analyst_macro_chain.invoke({
             "context_time_output": state["context_time_output"],
             "context_space_output": state["context_space_output"],
@@ -107,29 +107,12 @@ def create_node_functions():
         }
 
     return {
-        "start": RunnableLambda(start),
-        "context_time": RunnableLambda(context_time),
-        "context_space": RunnableLambda(context_space),
-        "analyst_macro": RunnableLambda(analyst_macro),
-        "analyst_industry": RunnableLambda(analyst_industry),
-        "analyst_company": RunnableLambda(analyst_company),
-        "analyst_trading": RunnableLambda(analyst_trading),
-        "warren_buffett": RunnableLambda(warren_buffett)
+        "start": start,
+        "context_time": context_time,
+        "context_space": context_space,
+        "analyst_macro": analyst_macro,
+        "analyst_industry": analyst_industry,
+        "analyst_company": analyst_company,
+        "analyst_trading": analyst_trading,
+        "warren_buffett": warren_buffett
     }
-
-    # def analyst(state: State) -> State:
-    #     state["analysts_output"] = analyst_chain.invoke({"context_output": state["context_output"], "ticker": state["ticker"]}).content
-    #     return state
-    # def warren_buffett(state: State) -> State:
-    #     state["warren_buffett_output"] = warren_buffett_chain.invoke({
-    #         "context_output": state["context_output"], 
-    #         "analysts_output": state["analysts_output"], 
-    #         "ticker": state["ticker"]
-    #         }).content
-    #     return state
-    
-    # return {
-    #     "context": RunnableLambda(context),
-    #     "analyst": RunnableLambda(analyst),
-    #     "warren_buffett": RunnableLambda(warren_buffett)
-    # }
