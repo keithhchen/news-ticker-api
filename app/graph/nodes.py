@@ -33,13 +33,13 @@ class State(TypedDict):
 
 def create_node_functions():
     # Create processing chains
-    context_time_chain = CONTEXT_TIME_PROMPT | gpt4o
-    context_space_chain = CONTEXT_SPACE_PROMPT | gpt4o
-    analyst_macro_chain = ANALYST_MACRO_PROMPT | gpt4o
-    analyst_industry_chain = ANALYST_INDUSTRY_PROMPT | gpt4o
-    analyst_company_chain = ANALYST_COMPANY_PROMPT | gpt4o
-    analyst_trading_chain = ANALYST_TRADING_PROMPT | gpt4o
-    warren_buffett_chain = WARREN_BUFFETT_PROMPT | gpt4o
+    context_time_chain = CONTEXT_TIME_PROMPT | deepseek
+    context_space_chain = CONTEXT_SPACE_PROMPT | deepseek
+    analyst_macro_chain = ANALYST_MACRO_PROMPT | deepseek
+    analyst_industry_chain = ANALYST_INDUSTRY_PROMPT | deepseek
+    analyst_company_chain = ANALYST_COMPANY_PROMPT | deepseek
+    analyst_trading_chain = ANALYST_TRADING_PROMPT | deepseek
+    warren_buffett_chain = WARREN_BUFFETT_PROMPT | deepseek
     # final_chain = FINAL_PROMPT | gpt4o
 
     def start(state: State) -> State:
