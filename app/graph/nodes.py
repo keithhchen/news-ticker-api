@@ -1,5 +1,6 @@
 from typing import TypedDict, Annotated, TypeVar
 import operator
+import logging
 from langchain_core.runnables import RunnableLambda
 from app.config import gpt4o, deepseek
 from .prompts import (
@@ -11,6 +12,8 @@ from .prompts import (
      ANALYST_TRADING_PROMPT,
      WARREN_BUFFETT_PROMPT,
 )
+
+logger = logging.getLogger("uvicorn")
 
 T = TypeVar('T')
 
@@ -30,84 +33,67 @@ class State(TypedDict):
 
 def create_node_functions():
     # Create processing chains
-    context_time_chain = CONTEXT_TIME_PROMPT | deepseek
-    context_space_chain = CONTEXT_SPACE_PROMPT | deepseek
-    analyst_macro_chain = ANALYST_MACRO_PROMPT | deepseek
-    analyst_industry_chain = ANALYST_INDUSTRY_PROMPT | deepseek
-    analyst_company_chain = ANALYST_COMPANY_PROMPT | deepseek
-    analyst_trading_chain = ANALYST_TRADING_PROMPT | deepseek
-    warren_buffett_chain = WARREN_BUFFETT_PROMPT | deepseek
+    context_time_chain = CONTEXT_TIME_PROMPT | gpt4o
+    context_space_chain = CONTEXT_SPACE_PROMPT | gpt4o
+    analyst_macro_chain = ANALYST_MACRO_PROMPT | gpt4o
+    analyst_industry_chain = ANALYST_INDUSTRY_PROMPT | gpt4o
+    analyst_company_chain = ANALYST_COMPANY_PROMPT | gpt4o
+    analyst_trading_chain = ANALYST_TRADING_PROMPT | gpt4o
+    warren_buffett_chain = WARREN_BUFFETT_PROMPT | gpt4o
     # final_chain = FINAL_PROMPT | gpt4o
 
-    # Define node functions
-    """
-    def analyze(state: State) -> State:
-        state["analysis"] = analysis_chain.invoke({"input_text": state["input_text"]}).content
-        return state
-
-    def analyze_sentiment(state: State) -> State:
-        state["sentiment"] = sentiment_chain.invoke({"input_text": state["input_text"]}).content
-        return state
-
-    def summarize(state: State) -> State:
-        state["summary"] = summary_chain.invoke({"input_text": state["input_text"]}).content
-        return state
-
-    def compile_report(state: State) -> State:
-        # Get the latest values from the lists
-        state["final_report"] = final_chain.invoke({
-            "analysis": state["analysis"],
-            "sentiment": state["sentiment"],
-            "summary": state["summary"]
-        }).content
-        return state
-
-    return {
-        "analyze": RunnableLambda(analyze),
-        "analyze_sentiment": RunnableLambda(analyze_sentiment),
-        "summarize": RunnableLambda(summarize),
-        "compile": RunnableLambda(compile_report)
-    }
-    """ 
     def start(state: State) -> State:
         return state
 
-    def context_time(state: State) -> State:
-        state["context_time_output"] = context_time_chain.invoke({"news_input": state["news_input"]}).content
-        return state
-    def context_space(state: State) -> State:
-        state["context_space_output"] = context_space_chain.invoke({"news_input": state["news_input"]}).content
-        return state
-    def analyst_macro(state: State) -> State:
-        state["analyst_macro_output"] = analyst_macro_chain.invoke({
+    def context_time(state: State):
+        output = context_time_chain.invoke({"news_input": state["news_input"]}).content
+        return {
+            "context_time_output": output
+        }
+    def context_space(state: State):
+        output = context_space_chain.invoke({"news_input": state["news_input"]}).content
+        return {
+            "context_space_output": output
+        }
+    def analyst_macro(state: State):
+        logger.info("starting analyst_macro")
+        output = analyst_macro_chain.invoke({
             "context_time_output": state["context_time_output"],
             "context_space_output": state["context_space_output"],
             "ticker": state["ticker"]
             }).content
-        return state
-    def analyst_industry(state: State) -> State:
-        state["analyst_industry_output"] = analyst_industry_chain.invoke({
+        return {
+            "analyst_macro_output": output
+        }
+    def analyst_industry(state: State):
+        output = analyst_industry_chain.invoke({
             "context_time_output": state["context_time_output"],
             "context_space_output": state["context_space_output"],
             "ticker": state["ticker"]
             }).content
-        return state
-    def analyst_company(state: State) -> State:
-        state["analyst_company_output"] = analyst_company_chain.invoke({
+        return {
+            "analyst_industry_output": output
+        }
+    def analyst_company(state: State):
+        output = analyst_company_chain.invoke({
             "context_time_output": state["context_time_output"],
             "context_space_output": state["context_space_output"],
             "ticker": state["ticker"]
             }).content
-        return state
-    def analyst_trading(state: State) -> State:
-        state["analyst_trading_output"] = analyst_trading_chain.invoke({
+        return {
+            "analyst_company_output": output
+        }
+    def analyst_trading(state: State):
+        output = analyst_trading_chain.invoke({
             "context_time_output": state["context_time_output"],
             "context_space_output": state["context_space_output"],
             "ticker": state["ticker"]
             }).content
-        return state
-    def warren_buffett(state: State) -> State:
-        state["warren_buffett_output"] = warren_buffett_chain.invoke({
+        return {
+            "analyst_trading_output": output
+        }
+    def warren_buffett(state: State):
+        output = warren_buffett_chain.invoke({
             "context_time_output": state["context_time_output"],
             "context_space_output": state["context_space_output"],
             "analyst_macro_output": state["analyst_macro_output"],
@@ -116,7 +102,9 @@ def create_node_functions():
             "analyst_trading_output": state["analyst_trading_output"],
             "ticker": state["ticker"]
             }).content
-        return state
+        return {
+            "warren_buffett_output": output
+        }
 
     return {
         "start": RunnableLambda(start),
@@ -128,21 +116,20 @@ def create_node_functions():
         "analyst_trading": RunnableLambda(analyst_trading),
         "warren_buffett": RunnableLambda(warren_buffett)
     }
-    """
-    def analyst(state: State) -> State:
-        state["analysts_output"] = analyst_chain.invoke({"context_output": state["context_output"], "ticker": state["ticker"]}).content
-        return state
-    def warren_buffett(state: State) -> State:
-        state["warren_buffett_output"] = warren_buffett_chain.invoke({
-            "context_output": state["context_output"], 
-            "analysts_output": state["analysts_output"], 
-            "ticker": state["ticker"]
-            }).content
-        return state
+
+    # def analyst(state: State) -> State:
+    #     state["analysts_output"] = analyst_chain.invoke({"context_output": state["context_output"], "ticker": state["ticker"]}).content
+    #     return state
+    # def warren_buffett(state: State) -> State:
+    #     state["warren_buffett_output"] = warren_buffett_chain.invoke({
+    #         "context_output": state["context_output"], 
+    #         "analysts_output": state["analysts_output"], 
+    #         "ticker": state["ticker"]
+    #         }).content
+    #     return state
     
-    return {
-        "context": RunnableLambda(context),
-        "analyst": RunnableLambda(analyst),
-        "warren_buffett": RunnableLambda(warren_buffett)
-    }
-    """
+    # return {
+    #     "context": RunnableLambda(context),
+    #     "analyst": RunnableLambda(analyst),
+    #     "warren_buffett": RunnableLambda(warren_buffett)
+    # }

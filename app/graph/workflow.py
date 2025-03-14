@@ -16,8 +16,6 @@ def create_workflow():
     workflow.add_edge("analyze", "summarize")
     """
     
-
-
     # Define a chained execution path
     workflow.set_entry_point("start")
 

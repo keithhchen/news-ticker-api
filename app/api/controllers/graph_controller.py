@@ -17,7 +17,7 @@ router = APIRouter(
 
 class GraphInput(BaseModel):
     input_text: str
-    parameters: Optional[Dict] = None
+    ticker: str
 
 def cleanup_file(path: str):
     """Background task to clean up the temporary file"""
@@ -54,25 +54,16 @@ async def draw_graph(background_tasks: BackgroundTasks):
 @router.post("/process")
 async def process_with_graph(input_data: GraphInput):
     # Create a fresh state dictionary for each request
-    """
-    initial_state = {
-        "input_text": input_data.input_text,
-        "analysis": [],
-        "sentiment": [],
-        "summary": [],
-        "final_report": []
-    }
-    """
     initial_state = {
         "news_input": input_data.input_text,
-        "ticker": input_data.parameters.get("ticker", ""),  # 从 parameters 中获取 ticker
-        "context_time_output": [],
-        "context_space_output": [],
-        "analyst_macro_output": [],
-        "analyst_industry_output": [],
-        "analyst_company_output": [],
-        "analyst_trade_output": [],
-        "warren_buffett": []
+        "ticker": input_data.ticker,
+        "context_time_output": "",
+        "context_space_output": "",
+        "analyst_macro_output": "",
+        "analyst_industry_output": "",
+        "analyst_company_output": "",
+        "analyst_trade_output": "",
+        "warren_buffett": ""
     }
     
     # Create a new workflow instance for each request
