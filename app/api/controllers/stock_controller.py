@@ -2,6 +2,8 @@ from fastapi import APIRouter, HTTPException, Depends
 import aiohttp
 from typing import Optional
 from app.supabase import supabase, get_authenticated_user
+from pydantic import BaseModel
+import asyncio
 
 router = APIRouter(
     prefix="/stock",
@@ -78,4 +80,50 @@ async def get_info(
     except HTTPException as e:
         raise e
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) 
+        raise HTTPException(status_code=500, detail=str(e))
+
+class NewsStockRequest(BaseModel):
+    news_id: str
+    stock_id: int
+
+@router.post("/news-and-stock")
+async def get_news_and_stock(
+    request: NewsStockRequest,
+    user=Depends(get_authenticated_user)
+):
+    """Get both news and stock information by their IDs"""
+    
+    async def fetch_news():
+        news_result = supabase.table("news").select("*").eq("id", request.news_id).execute()
+        if not news_result.data or len(news_result.data) == 0:
+            raise HTTPException(status_code=404, detail="News not found")
+        return news_result.data[0]
+    
+    async def fetch_stock():
+        stock_result = supabase.table("stocks").select("*").eq("id", request.stock_id).execute()
+        if not stock_result.data or len(stock_result.data) == 0:
+            raise HTTPException(status_code=404, detail="Stock not found")
+        return stock_result.data[0]
+    
+    # Fetch both concurrently
+    news_data, stock_data = await asyncio.gather(
+        fetch_news(),
+        fetch_stock(),
+        return_exceptions=True
+    )
+    
+    # Handle any exceptions that occurred
+    if isinstance(news_data, Exception):
+        raise HTTPException(status_code=500, detail=f"Failed to fetch news: {str(news_data)}")
+    if isinstance(stock_data, Exception):
+        raise HTTPException(status_code=500, detail=f"Failed to fetch stock: {str(stock_data)}")
+    
+    stock_info = await get_stock_info(stock_data["ticker"])
+    
+    return {
+        "news": news_data,
+        "stock": {
+            "info": stock_data,
+            "real_time_data": stock_info
+        }
+    } 
