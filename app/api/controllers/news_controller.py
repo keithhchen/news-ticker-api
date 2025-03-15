@@ -99,3 +99,93 @@ async def fetch_and_store_news(category: str, page: int):
     except Exception as e:
         logger.error(f"Error in fetch_and_store_news: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+RSS_FEEDS = [
+    "https://feedx.net/rss/mrdx.xml",
+    "https://feedx.net/rss/thepaper.xml",
+    "https://feedx.net/rss/jingjiribao.xml",
+    "https://www.chinanews.com.cn/rss/world.xml",
+    "https://www.chinanews.com.cn/rss/finance.xml",
+    "https://www.chinanews.com.cn/rss/scroll-news.xml"
+]
+
+async def fetch_rss_feed(url: str) -> str:
+    """Fetch RSS feed content from URL"""
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                if response.status == 200:
+                    return await response.text()
+                return ""
+    except Exception as e:
+        logger.error(f"Error fetching RSS feed from {url}: {e}")
+        return ""
+
+async def parse_rss_items(xml_content: str):
+    """Parse RSS feed XML content and extract news items"""
+    try:
+        from xml.etree import ElementTree as ET
+        root = ET.fromstring(xml_content)
+        channel = root.find('channel')
+        if channel is None:
+            return []
+            
+        items = []
+        for item in channel.findall('item'):
+            title = item.find('title')
+            link = item.find('link')
+            description = item.find('description')
+            pub_date = item.find('pubDate')
+            
+            items.append({
+                'title': title.text.strip() if title is not None and title.text else '',
+                'url': link.text.strip() if link is not None and link.text else '',
+                'description': description.text if description is not None and description.text else '',
+                'pubDate': pub_date.text if pub_date is not None and pub_date.text else ''
+            })
+        return items
+    except Exception as e:
+        logger.error(f"Error parsing RSS feed: {e}")
+        return []
+
+@router.post("/fetch-rss")
+async def fetch_and_store_rss():
+    """Fetch news from RSS feeds and store in database"""
+    try:
+        stored_count = 0
+        for feed_url in RSS_FEEDS:
+            # Fetch RSS feed content
+            xml_content = await fetch_rss_feed(feed_url)
+            if not xml_content:
+                continue
+                
+            # Parse RSS items
+            news_items = await parse_rss_items(xml_content)
+            
+            # Store each news item
+            for item in news_items:
+                # Check if news already exists
+                existing = supabase.table("news").select("*").eq("url", item['url']).execute()
+                
+                if not existing.data:
+                    # Fetch full article content
+                    summary = await fetch_article_content(item['url'])
+                    
+                    # Prepare news record
+                    news_record = {
+                        "published_at": item['pubDate'],
+                        "title": item['title'],
+                        "url": item['url'],
+                        "source": feed_url.split('/')[-1].replace('.xml', ''),
+                        "summary": summary or item['description']
+                    }
+                    
+                    # Store in Supabase
+                    supabase.table("news").insert(news_record).execute()
+                    stored_count += 1
+        
+        return {"message": f"Successfully stored {stored_count} new RSS news items"}
+        
+    except Exception as e:
+        logger.error(f"Error in fetch_and_store_rss: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
