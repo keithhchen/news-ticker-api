@@ -59,14 +59,13 @@ async def process_with_graph(input_data: GraphInput):
     initial_state = {
         "news_input": input_data.input_text,
         "ticker": input_data.ticker,
-        "summary": "",
         "context_time_output": "",
         "context_space_output": "",
         "analyst_macro_output": "",
         "analyst_industry_output": "",
         "analyst_company_output": "",
-        "analyst_trade_output": "",
-        "warren_buffett": "",
+        "analyst_trading_output": "",
+        "warren_buffett_output": "",
         "summary_node_time": "",
         "context_time_time": "",
         "context_space_time": "",
@@ -80,4 +79,4 @@ async def process_with_graph(input_data: GraphInput):
     # Create a new workflow instance for each request
     graph = create_workflow()
     result = graph.invoke(initial_state)
-    return {"result": result} 
+    return {"result": result}
