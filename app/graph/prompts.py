@@ -102,7 +102,7 @@ CONTEXT_SPACE_PROMPT = ChatPromptTemplate.from_messages([
 ])
 
 ANALYST_MACRO_PROMPT = ChatPromptTemplate.from_messages([
-    ("system", "作为一个宏观分析师，请根据以下信息进行判断"),
+    ("system", "作为一个宏观分析师，你擅长寻找信息与股票之间的联系，请根据以下信息进行判断"),
     ("user", '''
     Stock: {ticker}
     Summary: {summary}
@@ -111,15 +111,16 @@ ANALYST_MACRO_PROMPT = ChatPromptTemplate.from_messages([
     进行以下判断：
         - 判断Summary, Context_time 和 Context_space 中是否存在影响 Stock 的宏观信息，是无关、利多还是利空，判断是长期还是短期影响；
         - 判断Summary, Context_time 和 Context_space 中是否存在影响 Stock 的资本市场数据、监管政策，是无关、利多还是利空，判断是长期还是短期影响；
-    最后给出结论，输出elevator pitch 风格简洁明了推理过程，格式例子如下：
+    最后给出结论，输出elevator pitch 风格简洁明了推理过程，格式例子如下，必须同时包含长期和短期：
     {{
       "宏观因素": 无关，长期，推理过程；
+      "宏观因素": 利多，短期，推理过程；
     }}
     ''')
 ])
 
 ANALYST_INDUSTRY_PROMPT = ChatPromptTemplate.from_messages([
-    ("system", "作为一个行业股票分析师，请根据以下信息进行判断"),
+    ("system", "作为一个行业股票分析师，你擅长寻找信息与股票之间的联系，请根据以下信息进行判断"),
     ("user", '''
     Stock: {ticker}
     Summary: {summary}
@@ -127,15 +128,16 @@ ANALYST_INDUSTRY_PROMPT = ChatPromptTemplate.from_messages([
     Context_space: {context_space_output}
     进行以下判断：
         - 使用五力模型,判断 Summary, Context_time 和 Context_space 中是否存在影响 Stock 的因素，是无关、利多还是利空，判断是长期还是短期影响；
-    输出elevator pitch 风格简洁明了推理过程，输出的格式例子如下：
+    输出elevator pitch 风格简洁明了推理过程，输出的格式例子如下，必须同时包含长期和短期：
     {{
-      "行业因素": 利空，短期，推理过程；
+      "行业因素": 利空，长期，推理过程；
+      "行业因素": 无关，短期，推理过程；
     }}
     ''')
 ])
 
 ANALYST_COMPANY_PROMPT = ChatPromptTemplate.from_messages([
-    ("system", "作为一个公司分析师，请根据以下信息进行分析"),
+    ("system", "作为一个公司分析师，你擅长寻找信息与股票之间的联系，请根据以下信息进行分析"),
     ("user", '''
     Stock: {ticker}
     Summary: {summary}
@@ -143,23 +145,24 @@ ANALYST_COMPANY_PROMPT = ChatPromptTemplate.from_messages([
     Context_space: {context_space_output}
     进行以下分析：
         - 判断在公司层面，Summary, Context_time 和 Context_space 中是否存在影响 Stock 的因素，是无关、利多还是利空，判断是长期还是短期影响；
-    输出elevator pitch 风格简洁明了推理过程，输出的格式例子如下：
+    输出elevator pitch 风格简洁明了推理过程，输出的格式例子如下，必须同时包含长期和短期：
     {{
       "公司因素": 利多，长期，推理过程；
+      "公司因素": 利空，短期，推理过程；
     }}
     ''')
 ])
 
 ANALYST_TRADING_PROMPT = ChatPromptTemplate.from_messages([
-    ("system", "作为一个交易员，请根据以下信息进行分析"),
+    ("system", "作为一个交易员，你擅长寻找信息与股票之间的联系，请根据以下信息进行分析"),
     ("user", '''
     Stock: {ticker}
     Summmary: {summary}
     Context_time: {context_time_output}
     Context_space: {context_space_output}
     进行以下分析：
-        - 判断在短期交易层面，Summary, Context_time 和 Context_space 中是否存在影响 Stock 的因素，是无关、利多还是利空，判断是长期还是短期影响；
-    输出elevator pitch 风格简洁明了推理过程，输出的格式例子如下：
+        - 你只判断短期影响，判断在短期交易层面，Summary, Context_time 和 Context_space 中是否存在影响 Stock 的因素，是无关、利多还是利空；
+    输出elevator pitch 风格简洁明了推理过程，输出的格式例子如下，只包含短期：
     {{
       "交易因素": 利空，短期，推理过程；
     }}
@@ -184,7 +187,7 @@ WARREN_BUFFETT_PROMPT = ChatPromptTemplate.from_messages([
     Stock: {ticker}
     
     请根据以上分析资料，判断对 Stock 的影响，并得出看多、看空或者无关的结论，
-    结论中应该包含相应的概率以及推理过程，推理过程需要用递进式逻辑，elevator pitch 风格并不要提到各个部分的权重，例如：
+    结论中应该包含相应的概率以及推理过程，推理过程需要用递进式逻辑，elevator pitch 方式并使用巴菲特的讲话风格并不要提到各个部分的权重，例如：
     
     {{
       "利多": 0.8,
