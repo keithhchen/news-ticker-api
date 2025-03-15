@@ -69,33 +69,33 @@ FINAL_PROMPT = ChatPromptTemplate.from_messages([
 #    """)
 #])
 
+SUMMARY_PROMPT = ChatPromptTemplate.from_messages([
+    ("system", "你是一个专业的新闻总结器，根据 News_input，你需要对其进行总结。"),
+    ("user", "News_input: {news_input}"),
+    ("user", "请对 News_input 进行包含全部facts和数字的总结，简洁明了地输出：")
+])
+
 CONTEXT_TIME_PROMPT = ChatPromptTemplate.from_messages([
-    ("system", "你是一个专业的新闻分析师，根据 News_input，你需要补充时间维度."),
+    ("system", "你是一个专业的新闻分析师，判断 News_input 是以下哪种类型：数据新闻、调查性报道、分析行报道、特写报道、背景报道、预测性报道，请根据其类型补充相关信息，简洁明了地输出："),
     ("user", """
-    News_input: {news_input}
-    补充的信息需要包括：
-      - 如果是数据新闻，请补充事件发生的时间点，及数据在时间轴上的变化趋势；
-      - 如果是调查性报道，请补充事件的起源、发展和影响；
-      - 如果是分析性报道，请补充新闻事件的背景、原因和可能的影响；
-      - 如果是特写报道，请补充报道对象，如特定人物、地点或事件的时间维度信息；
-      - 如果是背景报道，请补充事件的历史背景、相关政策的演变等；
-      - 如果是预测性报道，请补充未来可能发生的事件。
-    输出补充的信息
+    News_input: {news_input}"
+    - 数据新闻：事件发生时间点，数据的时间变化趋势；
+    - 调查性报道：事件的起源、发展和影响；
+    - 分析性报道：新闻事件的背景、原因和可能的影响；
+    - 特写报道：报道对象，如特定人物、地点或事件的时间维度信息；
+    - 背景报道：事件的历史背景、相关政策的演变等；
+    - 预测性报道：未来可能发生的事件。
     """)
 ])
 
 CONTEXT_SPACE_PROMPT = ChatPromptTemplate.from_messages([
-    ("system", "你是一个专业的新闻分析师，根据 News_input，你需要补充空间维度."),
-    ("user", """
-    News_input: {news_input}
-    补充的信息需要包括：
-      - 补充可能涉及的人物，包括具体个人和群体，即 who；
-      - 补充可能受影响的行业，即 Industry；
-      - 补充可能相关的地点，即 where；
-      - 补充可能影响的经济因素，即 what；
-      - 补充可能产生影响的机制，即 how。
-    输出补充的信息
-    """)
+    ("system", "你是一个专业的新闻分析师,请根据以下新闻内容补充相关信息，简洁明了地输出："),
+    ("user", "News_input: {news_input}"),
+    ("user", "请列出相关人物（who）:"),
+    ("user", "请列出受影响行业（Industry）:"),
+    ("user", "请列出相关地点（where）:"),
+    ("user", "请描述影响的经济因素（what）:"),
+    ("user", "请描述影响机制（how):")
 ])
 
 
@@ -130,30 +130,32 @@ CONTEXT_SPACE_PROMPT = ChatPromptTemplate.from_messages([
 # ])
 
 ANALYST_MACRO_PROMPT = ChatPromptTemplate.from_messages([
-    ("system", "你是一个专业的宏观股票分析师，根据 Stock, Context_time 以及 Context_space, 你需要对对应的上市公司进行宏观维度投资分析."),
+    ("system", "作为一个宏观分析师，请根据以下信息进行分析"),
     ("user", """
     Stock: {ticker}
+    Summary: {summary}
     Context_time: {context_time_output}
     Context_space: {context_space_output}
     进行以下分析：
-        - 分析哪些宏观经济因素对公司可能产生影响，并在 Context 中寻找是否有这些因素，首先判断与 Stock 是否相关，如果相关，再判断是利多还是利空；
-        - 分析哪些资本市场数据、监管政策可能对公司可能产生影响，并在 Context 中寻找是否有这些因素，首先判断与 Stock 是否相关，如果相关，再判断是利多还是利空；
-    完成以上分析之后，输出结论，输出的格式例子如下：
+        - 判断Summary, Context_time 和 Context_space 中是否存在影响 Stock 的宏观信息，是无关、利多还是利空；
+        - 判断Summary, Context_time 和 Context_space 中是否存在影响 Stock 的资本市场数据、监管政策，是无关、利多还是利空；
+    最后给出结论，输出elevator pitch 风格简洁明了推理过程，格式例子如下：
     {{
-      "宏观因素": 利空，推理过程；
+      "宏观因素": 无关，推理过程；
     }}
     """)
 ])
 
 ANALYST_INDUSTRY_PROMPT = ChatPromptTemplate.from_messages([
-    ("system", "你是一个专业的行业股票分析师，根据 Stock, Context_time 以及 Context_space, 你需要对对应的上市公司进行行业维度投资分析."),
+    ("system", "作为一个行业股票分析师，请根据以下信息进行分析"),
     ("user", """
     Stock: {ticker}
+    Summary: {summary}
     Context_time: {context_time_output}
     Context_space: {context_space_output}
     进行以下分析：
-        - 使用五力模型等分析工具分析哪些因素可能对公司产生影响，并在 Context 中寻找是否有这些因素，首先判断与 Stock 是否相关，如果相关，再判断是利多还是利空；
-    完成以上分析之后，输出结论，输出的格式例子如下：
+        - 使用五力模型,判断 Summary, Context_time 和 Context_space 中是否存在影响 Stock 的因素，是无关、利多还是利空；
+    输出elevator pitch 风格简洁明了推理过程，输出的格式例子如下：
     {{
       "行业因素": 利空，推理过程；
     }}
@@ -161,15 +163,15 @@ ANALYST_INDUSTRY_PROMPT = ChatPromptTemplate.from_messages([
 ])
 
 ANALYST_COMPANY_PROMPT = ChatPromptTemplate.from_messages([
-    ("system", "你是一个专业的公司股票分析师，根据 Stock, Context_time 以及 Context_space, 你需要对对应的上市公司进行公司维度投资分析."),
+    ("system", "作为一个公司分析师，请根据以下信息进行分析"),
     ("user", """
     Stock: {ticker}
+    Summary: {summary}
     Context_time: {context_time_output}
     Context_space: {context_space_output}
     进行以下分析：
-        - 在公司经营层面，分析哪些因素可能对公司产生影响，包括不限于公司的供应链、客户、竞争对手，公司的管理层，公司的融资手段，公司的资本市场动作，公司的财务数据等，
-        并在 Context 中寻找是否有这些因素，首先判断与 Stock 是否相关，如果相关，再判断是利多还是利空；
-    完成以上分析之后，输出结论，输出的格式例子如下：
+        - 判断在公司层面，Summary, Context_time 和 Context_space 中是否存在影响 Stock 的因素，是无关、利多还是利空；
+    输出elevator pitch 风格简洁明了推理过程，输出的格式例子如下：
     {{
       "公司因素": 利多，推理过程；
     }}
@@ -177,14 +179,15 @@ ANALYST_COMPANY_PROMPT = ChatPromptTemplate.from_messages([
 ])
 
 ANALYST_TRADING_PROMPT = ChatPromptTemplate.from_messages([
-    ("system", "你是一个专业的交易股票分析师，根据 Stock, Context_time 以及 Context_space, 你需要对对应的上市公司进行交易维度投资分析."),
+    ("system", "作为一个交易员，请根据以下信息进行分析"),
     ("user", """
     Stock: {ticker}
+    Summmary: {summary}
     Context_time: {context_time_output}
     Context_space: {context_space_output}
     进行以下分析：
-        - 在交易层面，分析哪些因素，包括不限于技术指标、情绪指标可能对公司产生影响，并在 Context 中寻找是否有这些因素，首先判断与 Stock 是否相关，如果相关，再判断是利多还是利空；
-    完成以上分析之后，输出结论，输出的格式例子如下：
+        - 判断在短期交易层面，Summary, Context_time 和 Context_space 中是否存在影响 Stock 的因素，是无关、利多还是利空；
+    输出elevator pitch 风格简洁明了推理过程，输出的格式例子如下：
     {{
       "交易因素": 利空，推理过程；
     }}
@@ -193,40 +196,25 @@ ANALYST_TRADING_PROMPT = ChatPromptTemplate.from_messages([
 
 
 WARREN_BUFFETT_PROMPT = ChatPromptTemplate.from_messages([
-    ("system", "你是沃伦·巴菲特，你的投资风格长期以来秉持价值投资理念，专注于购买具有长期竞争优势且被市场低估的公司股票。针对四个投资维度：宏观、行业、公司、交易，你会根据其对投资决策的影响程度，给予不同的权重。"),
-    ("user", """
-    Context_time: {context_time_output}
-    Context_space: {context_space_output}
+    ("system", """
+    你是价值投资大师 Warren Buffett，分析 Stock 时，请按以下权重评估信息：
+    - 公司基本面(50%)：稳定盈利能力、高股东回报率、低负债、优秀管理团队
+    - 行业特性(30%)：稳定性、可预测性、竞争格局
+    - 宏观因素(10%)：经济周期、政策环境
+    - 交易策略(10%)：买入价格、长期持有理念
+    基于提供的分析，判断Summary对Stock是利多、利空还是无关，并提供清晰的推理过程和概率。
+    """),
+    ("user", """分析资料：
+    Summary: {summary}
     Analyst_macro: {analyst_macro_output}
     Analyst_industry: {analyst_industry_output}
     Analyst_company: {analyst_company_output}
     Analyst_trading: {analyst_trading_output}
     Stock: {ticker}
     
-    1. 公司层面：权重 50%
-        你最关注的是公司的基本面，这占据了你投资决策的主要部分。具体而言，你重视以下几个方面：
-        ·       持续稳定的盈利能力：你倾向于投资那些能够长期保持盈利的公司。这些公司通常拥有稳定的业务模式，能够在不同的经济周期中维持盈利能力。
-        ·       高股东权益回报率，低负债：你偏好那些股东权益回报率高且负债水平低的公司。这些公司通常具有更强的财务健康状况，能够更好地抵御市场波动。
-        ·       卓越的管理团队：优秀的管理层是公司成功的关键。你寻找那些以股东利益为先，具备卓越经营能力的管理团队。
-      2. 行业层面：权重 30%
-        在选择投资标的时，你也会考虑所处行业的特性，这占据了你投资决策的次要部分。具体而言：
-        ·       行业的稳定性和可预测性：你倾向于投资那些变化较少、可预测性高的行业。例如，消费品行业通常具有较高的稳定性。
-        ·       行业竞争格局：你关注行业内的竞争情况，寻找那些拥有护城河的公司，以确保其在行业中的领先地位。
-      3. 宏观层面：权重 10%
-        虽然宏观经济因素会影响市场整体表现，但你并不将其作为主要的投资决策依据。这占据了你投资决策的一小部分。具体而言：
-        ·       经济周期：你关注经济周期的变化，但不会因为宏观经济的短期波动而频繁调整投资策略。
-        ·       政策环境：你会留意影响行业和公司的政策变化，但更注重公司的内在价值。
-      4. 交易层面：权重 10%
-        交易策略在你的投资决策中占据了最小的部分。你更注重长期持有，而非频繁交易。具体而言：
-        ·       买入价格：你坚持在合理的价格买入优质公司股票，确保有足够的安全边际。
-        ·       长期持有：你相信长期持有能够充分体现公司的内在价值，避免频繁交易带来的成本和风险。
-         summarized, your investment decision is based on comprehensive analysis of the company's basic information, while also considering the industry characteristics, moderately focusing on the macroeconomic factors, and finally the investment strategy.
-
-
-    基于 Context_time, Context_space，
-    结合 Analyst_macro, Analyst_industry, Analyst_company, Analyst_trading 的初步判断，
-    你需要判断对 Stock 的影响，并得出看多、看空或者无关的结论，结论中应该包含相应的概率以及推理过程，例如：
-
+    请根据以上分析资料，判断对 Stock 的影响，并得出看多、看空或者无关的结论，
+    结论中应该包含相应的概率以及推理过程，推理过程需要用递进式逻辑，elevator pitch 风格并不要提到各个部分的权重，例如：
+    
     {{
       "利多": 0.8,
       "利空": 0.2,
