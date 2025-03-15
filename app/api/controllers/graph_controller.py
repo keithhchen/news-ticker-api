@@ -70,8 +70,5 @@ async def process_with_graph(input_data: GraphInput):
     
     # Create a new workflow instance for each request
     graph = create_workflow()
-    # result = graph.invoke(initial_state)
-    for chunk in graph.stream(input=initial_state, stream_mode="custom"):
-        logger.info(chunk)
-    return 2
-    # return {"result": result} 
+    result = graph.invoke(initial_state)
+    return {"result": result}
