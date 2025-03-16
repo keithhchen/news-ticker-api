@@ -351,7 +351,9 @@ SINGLE_SETH_PROMPT = ChatPromptTemplate.from_messages([
     - 影响的经济因素（what）
     - 请描述影响机制（how）
     
-    然后进行宏观分析，
+    根据News 以及以上补充信息，首先判断与 Stock 是否有关，如果有关，则进行以下分析：
+
+    首先进行宏观分析，
     挖掘 News 与 宏观经济 间的联系，并
     进行以下判断：
         - 判断News 中是否存在影响宏观经济指标的因素，是无关、利多还是利空，判断是长期还是短期影响；
@@ -376,7 +378,8 @@ SINGLE_SETH_PROMPT = ChatPromptTemplate.from_messages([
     进行以下分析：
         - News 中是否存在影响 该交易情况 的因素，是无关、利多还是利空；
     
-    根据以上四个维度：宏观、行业、公司、交易，综合判断 News对 Stock 是否相关，若相关，是利多还是利空，
+    根据以上四个维度：宏观、行业、公司、交易，判断哪个维度与 Stock 最相关，
+    然后根据这个维度判断 News对 Stock 是利多还是利空，
     输出严格按照以下格式，只包括三个 key 和相应的概率，不要包含 ```json```，而是直接输出 json
     
     {json_schema}
