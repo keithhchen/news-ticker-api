@@ -44,26 +44,26 @@ class State(TypedDict):
 
 def create_node_functions():
     # Create processing chains
-    summary_chain = SUMMARY_PROMPT | deepseek
-    context_time_chain = CONTEXT_TIME_PROMPT | deepseek
-    context_space_chain = CONTEXT_SPACE_PROMPT | deepseek
-    analyst_macro_chain = ANALYST_MACRO_PROMPT | deepseek
-    analyst_industry_chain = ANALYST_INDUSTRY_PROMPT | deepseek
-    analyst_company_chain = ANALYST_COMPANY_PROMPT | deepseek
-    analyst_trading_chain = ANALYST_TRADING_PROMPT | deepseek
-    warren_buffett_chain = WARREN_BUFFETT_PROMPT | deepseek
+    summary_chain = SUMMARY_PROMPT | gpt4o
+    context_time_chain = CONTEXT_TIME_PROMPT | gpt4o
+    context_space_chain = CONTEXT_SPACE_PROMPT | gpt4o
+    analyst_macro_chain = ANALYST_MACRO_PROMPT | gpt4o
+    analyst_industry_chain = ANALYST_INDUSTRY_PROMPT | gpt4o
+    analyst_company_chain = ANALYST_COMPANY_PROMPT | gpt4o
+    analyst_trading_chain = ANALYST_TRADING_PROMPT | gpt4o
+    warren_buffett_chain = WARREN_BUFFETT_PROMPT | gpt4o
     # final_chain = FINAL_PROMPT | gpt4o
+
 
     def start(state: State, writer: StreamWriter):
         writer({"node_start": "开始"})
         return state
-
+ 
     def summary_node(state: State, writer: StreamWriter, ):
         start_time = time()
         output = summary_chain.invoke({"news_input": state["news_input"]}).content
         end_time = time()
         elapsed_time = end_time - start_time
-        #writer({"summary_node": {end_time - start_time:.2f}"s"})
         return {
             "summary": output,
             "summary_node_time": elapsed_time
@@ -74,21 +74,21 @@ def create_node_functions():
         output = context_time_chain.invoke({"news_input": state["news_input"]}).content
         end_time = time()
         elapsed_time = end_time - start_time
-        #writer(f"context_time: {end_time - start_time:.2f}s")
         return {
             "context_time_output": output,
             "context_time_time": elapsed_time
         }
+
     def context_space(state: State, writer: StreamWriter):
         start_time = time()
         output = context_space_chain.invoke({"news_input": state["news_input"]}).content
         end_time = time()
-        #writer(f"context_space: {end_time - start_time:.2f}s")
         elapsed_time = end_time - start_time
         return {
             "context_space_output": output,
             "context_space_time": elapsed_time
         }
+
     def analyst_macro(state: State, writer: StreamWriter):
         start_time = time()
         output = analyst_macro_chain.invoke({
@@ -99,11 +99,11 @@ def create_node_functions():
             }).content
         end_time = time()
         elapsed_time = end_time - start_time
-        #writer(f"analyst_macro: {end_time - start_time:.2f}s")
         return {
             "analyst_macro_output": output,
             "analyst_macro_time": elapsed_time
         }
+
     def analyst_industry(state: State, writer: StreamWriter):
         start_time = time()
         output = analyst_industry_chain.invoke({
@@ -113,12 +113,12 @@ def create_node_functions():
             "ticker": state["ticker"]
             }).content
         end_time = time()
-        #writer(f"analyst_industry: {end_time - start_time:.2f}s")
         elapsed_time = end_time - start_time
         return {
             "analyst_industry_output": output,
             "analyst_industry_time": elapsed_time
         }
+
     def analyst_company(state: State, writer: StreamWriter):
         start_time = time()
         output = analyst_company_chain.invoke({
@@ -129,11 +129,11 @@ def create_node_functions():
             }).content
         end_time = time()
         elapsed_time = end_time - start_time
-        #writer(f"analyst_company: {end_time - start_time:.2f}s")
         return {
             "analyst_company_output": output,
             "analyst_company_time": elapsed_time
         }
+
     def analyst_trading(state: State, writer: StreamWriter):
         start_time = time()
         output = analyst_trading_chain.invoke({
@@ -144,11 +144,11 @@ def create_node_functions():
             }).content
         end_time = time()
         elapsed_time = end_time - start_time
-        #writer(f"analyst_trading: {end_time - start_time:.2f}s")
         return {
             "analyst_trading_output": output,
             "analyst_trading_time": elapsed_time
         }
+
     def warren_buffett(state: State, writer: StreamWriter):
         start_time = time()
         output = warren_buffett_chain.invoke({
@@ -161,7 +161,6 @@ def create_node_functions():
             }).content
         end_time = time()
         elapsed_time = end_time - start_time
-        #writer(f"warren_buffett: {end_time - start_time:.2f}s")
         return {
             "warren_buffett_output": output,
             "warren_buffett_time": elapsed_time

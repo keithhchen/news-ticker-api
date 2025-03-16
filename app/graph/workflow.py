@@ -12,6 +12,7 @@ def create_workflow():
     # Define a chained execution path
     workflow.set_entry_point("start")
 
+    
     workflow.add_edge("start", "summary_node")
     workflow.add_edge("start", "context_time")
     workflow.add_edge("start", "context_space")
@@ -25,6 +26,7 @@ def create_workflow():
     workflow.add_edge(["summary_node","context_time","context_space"], "analyst_trading")
 
     workflow.add_edge(["analyst_macro","analyst_industry","analyst_company","analyst_trading"], "warren_buffett")
+    
 
     workflow.add_edge("warren_buffett", END)
 
