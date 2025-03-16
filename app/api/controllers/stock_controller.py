@@ -5,7 +5,7 @@ from app.supabase import supabase, get_authenticated_user
 from pydantic import BaseModel
 import asyncio
 import logging
-from .graph_controller import process_with_graph, GraphInput
+from .graph_controller import process_with_graph, GraphInput, process_with_simple_graph
 from uuid import UUID
 
 logger = logging.getLogger("uvicorn")
@@ -129,12 +129,18 @@ class NewsStockRequest(BaseModel):
     news_id: str
     stock_id: int
 
-@router.post("/news-and-stock", dependencies=[Depends(get_authenticated_user)])
-# @router.post("/news-and-stock")
+# @router.post("/news-and-stock", dependencies=[Depends(get_authenticated_user)])
+@router.post("/news-and-stock")
 async def get_news_and_stock(
     request: NewsStockRequest,
+    simple: bool = False,
 ):
-    """Get both news and stock information by their IDs"""
+    """Get both news and stock information by their IDs
+    Args:
+        news_id: ID of the news article
+        stock_id: ID of the stock
+        simple: If True, uses simple graph workflow for analysis
+    """
 
     async def fetch_news():
         news_result = supabase.table("news").select("*").eq("id", request.news_id).execute()
@@ -165,10 +171,14 @@ async def get_news_and_stock(
             
     graph_input = GraphInput(
         input_text=f"""title: {news_data["title"]}, summary: {news_data["summary"]}, source: {news_data["source"]}, published_at: {news_data["published_at"]}""",
-        ticker=f'{stock_data["ticker"]} {stock_data["name"]}, current price: {stock_real_time_data["current"]}, volume: {stock_real_time_data["volume"]}'
-    )
+        # ticker=f'{stock_data["ticker"]} {stock_data["name"]}, current price: {stock_real_time_data["current"]}, volume: {stock_real_time_data["volume"]}')
+        ticker=f'{stock_data["ticker"]} {stock_data["name"]}')
     logger.info(graph_input)
-    graph_result = await process_with_graph(graph_input)
+    
+    if simple:
+        graph_result = await process_with_simple_graph(graph_input)
+    else:
+        graph_result = await process_with_graph(graph_input)
     
     return {
         "news": news_data,
