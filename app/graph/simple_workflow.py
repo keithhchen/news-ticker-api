@@ -9,7 +9,7 @@ logger = logging.getLogger("uvicorn")
 
 def create_simple_workflow():
     # Create processing chain
-    seth_chain = SINGLE_SETH_PROMPT | deepseek
+    seth_chain = SINGLE_SETH_PROMPT | gpt4o
 
     def simple_analysis(state: Dict):
         output = seth_chain.invoke({
