@@ -8,6 +8,7 @@ from langchain_core.runnables.graph import MermaidDrawMethod
 import logging 
 
 from app.graph.workflow import create_workflow
+from app.graph.simple_workflow import create_simple_workflow
 from app.supabase import get_authenticated_user
 
 logger = logging.getLogger("uvicorn")
@@ -53,8 +54,19 @@ async def draw_graph(background_tasks: BackgroundTasks):
         filename="workflow_graph.png"
     )
 
+@router.post("/simple-process")
+async def process_with_simple_graph(input_data: GraphInput):
+    # Create a new workflow instance for each request
+    graph = create_simple_workflow()
+    result = graph.invoke({
+        "news_input": input_data.input_text,
+        "ticker": input_data.ticker
+    })
+    return { "result": result }
+
 @router.post("/process")
 async def process_with_graph(input_data: GraphInput):
+
     # Create a fresh state dictionary for each request
     initial_state = {
         "news_input": input_data.input_text,

@@ -304,9 +304,29 @@ SON_PROMPT = ChatPromptTemplate.from_messages([
     ''')
 ])
 
-
-
-
+SIMPLE_PROMPT_OUTPUT_SCHEMA = {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "利多": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+        },
+        "利空": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+        },
+        "无关": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+        }
+    },
+    "required": ["利多", "利空", "无关"],
+    "additionalProperties": False
+}
 
 ### Test single prompt
 SINGLE_SETH_PROMPT = ChatPromptTemplate.from_messages([
@@ -355,13 +375,8 @@ SINGLE_SETH_PROMPT = ChatPromptTemplate.from_messages([
     进行以下分析：
         - News 中是否存在影响 该交易情况 的因素，是无关、利多还是利空；
 
-    根据以上四个维度：宏观、行业、公司、交易，判断 News对 Stock 的影响，是否相关，若相关，是利多还是利空，
-    输出严格按照以下格式，只包括三个 key 和相应的概率：
+    请根据以上分析资料，判断对 Stock 的影响，并得出看多、看空或者无关的概率，输出严格按照以下格式，只包括三个 key 和相应的概率，不要包含 ```json```，而是直接输出 json
     
-    {{
-      "利多": 0.8,
-      "利空": 0.2,
-      "无关": 0.0,
-    }}
+    {json_schema}
     ''')
 ])
