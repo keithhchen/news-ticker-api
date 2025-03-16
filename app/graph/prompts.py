@@ -367,6 +367,7 @@ SINGLE_SETH_PROMPT = ChatPromptTemplate.from_messages([
     挖掘 Stock 主营业务，主要财务指标，经营团队，公司治理等信息，
     挖掘 News 与 以上信息 间的联系，并
     进行以下分析：
+        - 判断 News 与 Stock 是否相关，若相关，是利多还是利空；
         - 判断 News 中是否存在影响 这些信息 的因素，是无关、利多还是利空，判断是长期还是短期影响；
     
     然后进行交易分析，
