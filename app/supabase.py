@@ -27,7 +27,7 @@ async def get_authenticated_user(request: Request, response: Response):
 
     try:
         user = supabase.auth.get_user(token)  # Try to validate the token
-        return user
+        return user.user
     except Exception as e:
         
         # Try to refresh the token if validation failed
@@ -46,6 +46,6 @@ async def get_authenticated_user(request: Request, response: Response):
             response.headers["x-refresh-token"] = refresh_response.session.refresh_token
             # Return user with refreshed token
             user = supabase.auth.get_user(new_token)
-            return user
+            return user.user
         except Exception:
             raise HTTPException(status_code=401, detail="Failed to refresh token")
