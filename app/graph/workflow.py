@@ -26,8 +26,14 @@ def create_workflow():
     workflow.add_edge(["summary_node","context_time","context_space"], "analyst_trading")
 
     workflow.add_edge(["analyst_macro","analyst_industry","analyst_company","analyst_trading"], "warren_buffett")
+    workflow.add_edge(["analyst_macro", "analyst_industry","analyst_company","analyst_trading"], "soros")
+    workflow.add_edge(["analyst_macro", "analyst_industry","analyst_company","analyst_trading"], "lynch")
+    workflow.add_edge(["analyst_macro", "analyst_industry","analyst_company","analyst_trading"], "son")
     
 
     workflow.add_edge("warren_buffett", END)
+    workflow.add_edge("soros", END)
+    workflow.add_edge("lynch", END)
+    workflow.add_edge("son", END)
 
     return workflow.compile()

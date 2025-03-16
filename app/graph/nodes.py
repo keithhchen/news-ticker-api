@@ -12,6 +12,9 @@ from .prompts import (
      ANALYST_COMPANY_PROMPT,
      ANALYST_TRADING_PROMPT,
      WARREN_BUFFETT_PROMPT,
+     SOROS_PROMPT,
+     LYNCH_PROMPT,
+     SON_PROMPT
 )
 from time import time
 
@@ -33,6 +36,10 @@ class State(TypedDict):
     analyst_company_output: Annotated[str, take_latest]
     analyst_trading_output: Annotated[str, take_latest]
     warren_buffett_output: Annotated[str, take_latest]
+    soros_output: Annotated[str, take_latest]
+    lynch_output: Annotated[str, take_latest]
+    son_output: Annotated[str, take_latest]
+
     summary_node_time: Annotated[float, take_latest]
     context_time_time: Annotated[float, take_latest]
     context_space_time: Annotated[float, take_latest]
@@ -41,18 +48,23 @@ class State(TypedDict):
     analyst_company_time: Annotated[float, take_latest]
     analyst_trading_time: Annotated[float, take_latest]
     warren_buffett_time: Annotated[float, take_latest]
+    soros_time: Annotated[float, take_latest]
+    lynch_time: Annotated[float, take_latest]
+    son_time: Annotated[float, take_latest]
 
 def create_node_functions():
     # Create processing chains
-    summary_chain = SUMMARY_PROMPT | gpt4o
-    context_time_chain = CONTEXT_TIME_PROMPT | gpt4o
-    context_space_chain = CONTEXT_SPACE_PROMPT | gpt4o
-    analyst_macro_chain = ANALYST_MACRO_PROMPT | gpt4o
-    analyst_industry_chain = ANALYST_INDUSTRY_PROMPT | gpt4o
-    analyst_company_chain = ANALYST_COMPANY_PROMPT | gpt4o
-    analyst_trading_chain = ANALYST_TRADING_PROMPT | gpt4o
-    warren_buffett_chain = WARREN_BUFFETT_PROMPT | gpt4o
-    # final_chain = FINAL_PROMPT | gpt4o
+    summary_chain = SUMMARY_PROMPT | deepseek
+    context_time_chain = CONTEXT_TIME_PROMPT | deepseek
+    context_space_chain = CONTEXT_SPACE_PROMPT | deepseek
+    analyst_macro_chain = ANALYST_MACRO_PROMPT | deepseek
+    analyst_industry_chain = ANALYST_INDUSTRY_PROMPT | deepseek
+    analyst_company_chain = ANALYST_COMPANY_PROMPT | deepseek
+    analyst_trading_chain = ANALYST_TRADING_PROMPT | deepseek
+    warren_buffett_chain = WARREN_BUFFETT_PROMPT | deepseek
+    soros_chain = SOROS_PROMPT | deepseek
+    lynch_chain = LYNCH_PROMPT | deepseek
+    son_chain = SON_PROMPT | deepseek
 
 
     def start(state: State, writer: StreamWriter):
@@ -166,6 +178,57 @@ def create_node_functions():
             "warren_buffett_time": elapsed_time
         }
 
+    def soros(state: State, writer: StreamWriter):
+        start_time = time()
+        output = soros_chain.invoke({
+            "summary": state["summary"],
+            "analyst_macro_output": state["analyst_macro_output"],
+            "analyst_industry_output": state["analyst_industry_output"],
+            "analyst_company_output": state["analyst_company_output"],
+            "analyst_trading_output": state["analyst_trading_output"],
+            "ticker": state["ticker"]
+            }).content
+        end_time = time()
+        elapsed_time = end_time - start_time
+        return {
+            "soros_output": output,
+            "soros_time": elapsed_time
+        }
+
+    def lynch(state: State, writer: StreamWriter):
+        start_time = time()
+        output = lynch_chain.invoke({
+            "summary": state["summary"],
+            "analyst_macro_output": state["analyst_macro_output"],
+            "analyst_industry_output": state["analyst_industry_output"],
+            "analyst_company_output": state["analyst_company_output"],
+            "analyst_trading_output": state["analyst_trading_output"],
+            "ticker": state["ticker"]
+            }).content
+        end_time = time()
+        elapsed_time = end_time - start_time
+        return {
+            "lynch_output": output,
+            "lynch_time": elapsed_time
+        }
+
+    def son(state: State, writer: StreamWriter):
+        start_time = time()
+        output = son_chain.invoke({
+            "summary": state["summary"],
+            "analyst_macro_output": state["analyst_macro_output"],
+            "analyst_industry_output": state["analyst_industry_output"],
+            "analyst_company_output": state["analyst_company_output"],
+            "analyst_trading_output": state["analyst_trading_output"],
+            "ticker": state["ticker"]
+            }).content
+        end_time = time()
+        elapsed_time = end_time - start_time
+        return {
+            "son_output": output,
+            "son_time": elapsed_time
+        }
+
     return {
         "start": start,
         "summary_node": summary_node,
@@ -175,5 +238,8 @@ def create_node_functions():
         "analyst_industry": analyst_industry,
         "analyst_company": analyst_company,
         "analyst_trading": analyst_trading,
-        "warren_buffett": warren_buffett
+        "warren_buffett": warren_buffett,
+        "soros": soros,
+        "lynch": lynch,
+        "son": son
     }
