@@ -106,7 +106,18 @@ RSS_FEEDS = [
     "https://feedx.net/rss/jingjiribao.xml",
     "https://www.chinanews.com.cn/rss/world.xml",
     "https://www.chinanews.com.cn/rss/finance.xml",
-    "https://www.chinanews.com.cn/rss/scroll-news.xml"
+    "https://www.chinanews.com.cn/rss/scroll-news.xml",
+    
+    "http://district.ce.cn/newarea/index.xml",
+    "http://www.chinanews.com/rss/finance.xml",
+    "http://xueqiu.com/hots/topic/rss",
+    "https://feedx.net/rss/thepaper.xml",
+    "http://feedmaker.kindle4rss.com/feeds/CBNweekly2008.weixin.xml",
+    "http://www.eeo.com.cn/rss.xml",
+    "https://rsshub.app/guancha/headline",
+    "http://www.people.com.cn/rss/finance.xml",
+    "http://copy.hexun.com/rss.jsp",
+    "https://rsshub.app/cls/telegraph",
 ]
 
 async def fetch_rss_feed(url: str) -> str:
