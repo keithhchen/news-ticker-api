@@ -91,7 +91,13 @@ async def process_with_graph(input_data: GraphInput):
         "lynch_output": "",
         "lynch_time": "",
         "son_output": "",
-        "son_time": ""
+        "son_time": "",
+        "leijun_output": "",
+        "leijun_time": "",
+        "li_ka_shing_output": "",
+        "li_ka_shing_time": "",
+        "kai_fu_lee_output": "",
+        "kai_fu_lee_time": "",
     }
     
     # Create a new workflow instance for each request

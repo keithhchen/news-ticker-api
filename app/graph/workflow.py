@@ -29,11 +29,16 @@ def create_workflow():
     workflow.add_edge(["analyst_macro", "analyst_industry","analyst_company","analyst_trading"], "soros")
     workflow.add_edge(["analyst_macro", "analyst_industry","analyst_company","analyst_trading"], "lynch")
     workflow.add_edge(["analyst_macro", "analyst_industry","analyst_company","analyst_trading"], "son")
-    
+    workflow.add_edge(["analyst_macro", "analyst_industry","analyst_company","analyst_trading"],"leijun")
+    workflow.add_edge(["analyst_macro", "analyst_industry","analyst_company","analyst_trading"],"li_ka_shing")
+    workflow.add_edge(["analyst_macro", "analyst_industry","analyst_company","analyst_trading"],"kai_fu_lee")
 
     workflow.add_edge("warren_buffett", END)
     workflow.add_edge("soros", END)
     workflow.add_edge("lynch", END)
     workflow.add_edge("son", END)
+    workflow.add_edge("leijun", END)
+    workflow.add_edge("li_ka_shing", END)
+    workflow.add_edge("kai_fu_lee", END)
 
     return workflow.compile()

@@ -14,7 +14,10 @@ from .prompts import (
      WARREN_BUFFETT_PROMPT,
      SOROS_PROMPT,
      LYNCH_PROMPT,
-     SON_PROMPT
+     SON_PROMPT,
+     LEIJUN_PROMPT,
+     LI_KA_SHING_PROMPT,
+     KAI_FU_LEE_PROMPT,
 )
 from time import time
 
@@ -39,6 +42,9 @@ class State(TypedDict):
     soros_output: Annotated[str, take_latest]
     lynch_output: Annotated[str, take_latest]
     son_output: Annotated[str, take_latest]
+    leijun_output: Annotated[str, take_latest]
+    li_ka_shing_output: Annotated[str, take_latest]
+    kai_fu_lee_output: Annotated[str, take_latest]
 
     summary_node_time: Annotated[float, take_latest]
     context_time_time: Annotated[float, take_latest]
@@ -51,6 +57,9 @@ class State(TypedDict):
     soros_time: Annotated[float, take_latest]
     lynch_time: Annotated[float, take_latest]
     son_time: Annotated[float, take_latest]
+    leijun_time: Annotated[float, take_latest]
+    li_ka_shing_time: Annotated[float, take_latest]
+    kai_fu_lee_time: Annotated[float, take_latest]
 
 def create_node_functions():
     # Create processing chains
@@ -65,6 +74,9 @@ def create_node_functions():
     soros_chain = SOROS_PROMPT | deepseek
     lynch_chain = LYNCH_PROMPT | deepseek
     son_chain = SON_PROMPT | deepseek
+    leijun_chain = LEIJUN_PROMPT | deepseek
+    li_ka_shing_chain = LI_KA_SHING_PROMPT | deepseek
+    kai_fu_lee_chain = KAI_FU_LEE_PROMPT | deepseek
 
 
     def start(state: State, writer: StreamWriter):
@@ -252,6 +264,63 @@ def create_node_functions():
             "son_time": elapsed_time
         }
 
+    def leijun(state: State, writer: StreamWriter):
+        writer({"node_start": "雷军正在研究 OK 不 OK"})
+        start_time = time()
+        output = leijun_chain.invoke({
+            "summary": state["summary"],
+            "analyst_macro_output": state["analyst_macro_output"],
+            "analyst_industry_output": state["analyst_industry_output"],
+            "analyst_company_output": state["analyst_company_output"],
+            "analyst_trading_output": state["analyst_trading_output"],
+            "ticker": state["ticker"]
+            }).content
+        end_time = time()
+        elapsed_time = end_time - start_time
+        writer({"node_end": "雷军OK 了"})
+        return {
+            "leijun_output": output,
+            "leijun_time": elapsed_time
+        }
+
+    def li_ka_shing(state: State, writer: StreamWriter):
+        writer({"node_start": "李嘉诚开始校准手表"})
+        start_time = time()
+        output = li_ka_shing_chain.invoke({
+            "summary": state["summary"],
+            "analyst_macro_output": state["analyst_macro_output"],
+            "analyst_industry_output": state["analyst_industry_output"],
+            "analyst_company_output": state["analyst_company_output"],
+            "analyst_trading_output": state["analyst_trading_output"],
+            "ticker": state["ticker"]
+            }).content
+        end_time = time()
+        elapsed_time = end_time - start_time
+        writer({"node_end": "校准完毕"})
+        return {
+            "li_ka_shing_output": output,
+            "li_ka_shing_time": elapsed_time
+        }
+
+    def kai_fu_lee(state: State, writer: StreamWriter):
+        writer({"node_start": "李开复开始推演"})
+        start_time = time()
+        output = kai_fu_lee_chain.invoke({
+            "summary": state["summary"],
+            "analyst_macro_output": state["analyst_macro_output"],
+            "analyst_industry_output": state["analyst_industry_output"],
+            "analyst_company_output": state["analyst_company_output"],
+            "analyst_trading_output": state["analyst_trading_output"],
+            "ticker": state["ticker"]
+            }).content
+        end_time = time()
+        elapsed_time = end_time - start_time
+        writer({"node_end": "李开复推演完毕"})
+        return {
+            "kai_fu_lee_output": output,
+            "kai_fu_lee_time": elapsed_time
+        }
+
     return {
         "start": start,
         "summary_node": summary_node,
@@ -264,5 +333,8 @@ def create_node_functions():
         "warren_buffett": warren_buffett,
         "soros": soros,
         "lynch": lynch,
-        "son": son
+        "son": son,
+        "leijun": leijun,
+        "li_ka_shing": li_ka_shing,
+        "kai_fu_lee": kai_fu_lee
     }
