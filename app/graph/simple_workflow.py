@@ -9,10 +9,10 @@ logger = logging.getLogger("uvicorn")
 
 def create_simple_workflow():
     # Create processing chain
-    warren_buffett_chain = SINGLE_SETH_PROMPT | gpt4o
+    seth_chain = SINGLE_SETH_PROMPT | gpt4o
 
     def simple_analysis(state: Dict):
-        output = warren_buffett_chain.invoke({
+        output = seth_chain.invoke({
             "news_input": state["news_input"],
             "ticker": state["ticker"],
             "json_schema": json.dumps(SIMPLE_PROMPT_OUTPUT_SCHEMA, ensure_ascii=False, indent=2)
