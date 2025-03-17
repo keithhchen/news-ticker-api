@@ -113,7 +113,7 @@ ANALYST_MACRO_PROMPT = ChatPromptTemplate.from_messages([
     进行以下判断：
         - 判断Summary, Context_time 和 Context_space 中是否存在影响宏观经济指标的因素，是无关、利多还是利空，判断是长期还是短期影响；
         - 判断Summary, Context_time 和 Context_space 中是否存在影响资本市场数据、监管政策的因素，是无关、利多还是利空，判断是长期还是短期影响；
-    最后给出结论，输出elevator pitch 方式并使用经济学家讲话风格的简洁明了推理过程，格式例子如下，必须同时包含长期和短期，原因中要包含具体收到影响的宏观经济指标、资本市场数据、监管政策：
+    最后给出结论，输出elevator pitch 方式并使用经济学家讲话风格的简洁明了推理过程，格式例子如下，必须同时包含长期和短期，原因中要包含具体受到影响的宏观经济指标、资本市场数据、监管政策：
     {{
       "宏观因素": 长期，无关，原因；
       "宏观因素": 短期，利多，原因；
@@ -122,7 +122,7 @@ ANALYST_MACRO_PROMPT = ChatPromptTemplate.from_messages([
 ])
 
 ANALYST_INDUSTRY_PROMPT = ChatPromptTemplate.from_messages([
-    ("system", "作为一个行业股票分析师，你擅长寻找信息与行业之间的联系，请根据以下信息进行判断"),
+    ("system", "作为一个行业分析师，你擅长寻找信息与行业之间的联系，请根据以下信息进行判断"),
     ("user", '''
     Stock: {ticker}
     Summary: {summary}
@@ -141,7 +141,7 @@ ANALYST_INDUSTRY_PROMPT = ChatPromptTemplate.from_messages([
 ])
 
 ANALYST_COMPANY_PROMPT = ChatPromptTemplate.from_messages([
-    ("system", "作为一个公司分析师，你擅长寻找信息与股票之间的联系，请根据以下信息进行分析"),
+    ("system", "作为一个个股分析师，你擅长寻找信息与股票之间的联系，请根据以下信息进行分析"),
     ("user", '''
     Stock: {ticker}
     Summary: {summary}
@@ -151,7 +151,7 @@ ANALYST_COMPANY_PROMPT = ChatPromptTemplate.from_messages([
     挖掘 Summary, Context_time 和 Context_space 与 以上信息 间的联系，并
     进行以下分析：
         - 判断Summary, Context_time 和 Context_space 中是否存在影响 这些信息 的因素，是无关、利多还是利空，判断是长期还是短期影响；
-    输出elevator pitch 方式并使用公司分析师讲话风格的简洁明了推理过程，输出的格式例子如下，必须同时包含长期和短期，原因中要包含公司主业是什么，受到影响的主要方面具体是什么：
+    输出elevator pitch 方式并使用个股分析师讲话风格的简洁明了推理过程，输出的格式例子如下，必须同时包含长期和短期，原因中要包含公司主业是什么，受到影响的主要方面具体是什么：
     {{
       "公司因素": 长期，利多，原因；
       "公司因素": 短期，利空，原因；
@@ -434,7 +434,7 @@ SIMPLE_PROMPT_OUTPUT_SCHEMA = {
 ### Test single prompt
 SINGLE_SETH_PROMPT = ChatPromptTemplate.from_messages([
     ("system", '''
-    你是投资小学生 SETH，你擅长分析新闻，判断其对股票的影响。
+    你是专业投资人SETH，你擅长分析新闻，判断其对股票的影响。
     基于提供的分析，判断News对Stock是利多、利空还是无关，并提供清晰的推理过程和概率。
     '''),
     ("user", '''分析资料：
@@ -454,7 +454,7 @@ SINGLE_SETH_PROMPT = ChatPromptTemplate.from_messages([
     - 影响的经济因素（what）
     - 请描述影响机制（how）
     
-    根据News 以及以上补充信息，首先判断与 Stock 是否有关，如果有关，则进行以下分析：
+    根据News 以及以上补充信息，你会进行以下分析：
 
     首先进行宏观分析，
     挖掘 News 与 宏观经济 间的联系，并
@@ -481,8 +481,7 @@ SINGLE_SETH_PROMPT = ChatPromptTemplate.from_messages([
     进行以下分析：
         - News 中是否存在影响 该交易情况 的因素，是无关、利多还是利空；
     
-    根据以上四个维度：宏观、行业、公司、交易，判断哪个维度与 Stock 最相关，
-    然后根据这个维度判断 News对 Stock 是利多还是利空，
+    最后综合根据以上四个维度的分析结论：宏观、行业、公司、交易，判断 News对 Stock 是利多还是利空，还是无关
     输出严格按照以下格式，只包括三个 key 和相应的概率，不要包含 ```json```，而是直接输出 json
     
     {json_schema}
