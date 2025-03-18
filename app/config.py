@@ -11,7 +11,7 @@ load_dotenv()
 # Initialize LLMs using environment variables
 gpt4o = ChatOpenAI(
     model="gpt-4o",
-    temperature=0.1,
+    temperature=0.01,
     api_key=os.environ.get("OPENAI_API_KEY")
 )
 
