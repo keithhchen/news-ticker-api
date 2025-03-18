@@ -90,6 +90,7 @@ def create_node_functions():
         end_time = time()
         elapsed_time = end_time - start_time
         writer({"node": "summary_node", "type": "end", "message": "核心内容提取完毕"})
+        writer({"node": "summary_node", "type": "output", "message": output})
         return {
             "summary": output,
             "summary_node_time": elapsed_time
@@ -102,6 +103,7 @@ def create_node_functions():
         end_time = time()
         elapsed_time = end_time - start_time
         writer({"node": "context_time", "type": "end", "message": "空间维度信息补充完毕"})
+        writer({"node": "context_time", "type": "output", "message": output})
         return {
             "context_time_output": output,
             "context_time_time": elapsed_time
@@ -114,6 +116,7 @@ def create_node_functions():
         end_time = time()
         elapsed_time = end_time - start_time
         writer({"node": "context_space", "type": "end", "message": "时间维度信息补充完毕"})
+        writer({"node": "context_space", "type": "output", "message": output})
         return {
             "context_space_output": output,
             "context_space_time": elapsed_time
@@ -131,6 +134,7 @@ def create_node_functions():
         end_time = time()
         elapsed_time = end_time - start_time
         writer({"node": "analyst_macro", "type": "end", "message": "经济学家分析完毕"})
+        writer({"node": "analyst_macro", "type": "output", "message": output})
         return {
             "analyst_macro_output": output,
             "analyst_macro_time": elapsed_time
@@ -148,6 +152,7 @@ def create_node_functions():
         end_time = time()
         elapsed_time = end_time - start_time
         writer({"node": "analyst_industry", "type": "end", "message": "钻研完毕"})
+        writer({"node": "analyst_industry", "type": "output", "message": output})
         return {
             "analyst_industry_output": output,
             "analyst_industry_time": elapsed_time
@@ -165,6 +170,7 @@ def create_node_functions():
         end_time = time()
         elapsed_time = end_time - start_time
         writer({"node": "analyst_company", "type": "end", "message": "研判完毕"})
+        writer({"node": "analyst_company", "type": "output", "message": output})
         return {
             "analyst_company_output": output,
             "analyst_company_time": elapsed_time
@@ -182,6 +188,7 @@ def create_node_functions():
         end_time = time()
         elapsed_time = end_time - start_time
         writer({"node": "analyst_trading", "type": "end", "message": "交易员分析完毕"})
+        writer({"node": "analyst_trading", "type": "output", "message": output})
         return {
             "analyst_trading_output": output,
             "analyst_trading_time": elapsed_time
@@ -201,6 +208,7 @@ def create_node_functions():
         end_time = time()
         elapsed_time = end_time - start_time
         writer({"node": "warren_buffett", "type": "end", "message": "巴菲特心意已决"})
+        writer({"node": "warren_buffett", "type": "output", "message": output})
         return {
             "warren_buffett_output": output,
             "warren_buffett_time": elapsed_time
@@ -220,6 +228,7 @@ def create_node_functions():
         end_time = time()
         elapsed_time = end_time - start_time
         writer({"node": "soros", "type": "end", "message": "索罗斯有了答案"})
+        writer({"node": "soros", "type": "output", "message": output})
         return {
             "soros_output": output,
             "soros_time": elapsed_time
@@ -239,6 +248,7 @@ def create_node_functions():
         end_time = time()
         elapsed_time = end_time - start_time
         writer({"node": "lynch", "type": "end", "message": "彼得林奇做出了决定"})
+        writer({"node": "lynch", "type": "output", "message": output})
         return {
             "lynch_output": output,
             "lynch_time": elapsed_time
@@ -258,6 +268,7 @@ def create_node_functions():
         end_time = time()
         elapsed_time = end_time - start_time
         writer({"node": "son", "type": "end", "message": "孙正义放下材料得出了结论"})
+        writer({"node": "son", "type": "output", "message": output})
         return {
             "son_output": output,
             "son_time": elapsed_time
@@ -277,6 +288,7 @@ def create_node_functions():
         end_time = time()
         elapsed_time = end_time - start_time
         writer({"node": "leijun", "type": "end", "message": "雷军OK 了"})
+        writer({"node": "leijun", "type": "output", "message": output})
         return {
             "leijun_output": output,
             "leijun_time": elapsed_time
@@ -296,6 +308,7 @@ def create_node_functions():
         end_time = time()
         elapsed_time = end_time - start_time
         writer({"node": "li_ka_shing", "type": "end", "message": "校准完毕"})
+        writer({"node": "li_ka_shing", "type": "output", "message": output})
         return {
             "li_ka_shing_output": output,
             "li_ka_shing_time": elapsed_time
@@ -315,6 +328,8 @@ def create_node_functions():
         end_time = time()
         elapsed_time = end_time - start_time
         writer({"node": "kai_fu_lee", "type": "end", "message": "李开复推演完毕"})
+        writer({"node": "kai_fu_lee", "type": "output", "message": output})
+
         return {
             "kai_fu_lee_output": output,
             "kai_fu_lee_time": elapsed_time

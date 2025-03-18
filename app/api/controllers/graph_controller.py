@@ -58,14 +58,15 @@ async def draw_graph(background_tasks: BackgroundTasks):
 async def process_with_simple_graph(input_data: GraphInput):
     # Create a new workflow instance for each request
     graph = create_simple_workflow()
+    
     result = graph.invoke({
         "news_input": input_data.input_text,
         "ticker": input_data.ticker
     })
-    return { "result": result }
+    return {"result": result}
 
 @router.post("/process")
-async def process_with_graph(input_data: GraphInput):
+async def process_with_graph(input_data: GraphInput, streaming: bool = False):
 
     # Create a fresh state dictionary for each request
     initial_state = {
@@ -102,5 +103,28 @@ async def process_with_graph(input_data: GraphInput):
     
     # Create a new workflow instance for each request
     graph = create_workflow()
-    result = graph.invoke(initial_state)
-    return {"result": result}
+    
+    if streaming:
+        from fastapi.responses import StreamingResponse
+        import json
+        
+        async def generate_stream():
+            # Use LangGraph's native streaming support
+            async for event in graph.astream({
+                "news_input": input_data.input_text,
+                "ticker": input_data.ticker
+            }, stream_mode=["custom"]):
+                # Format as Server-Sent Event
+                yield f"data: {json.dumps(event)}\n\n"
+        
+        return StreamingResponse(
+            generate_stream(),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive"
+            }
+        )
+    else:
+        result = graph.invoke(initial_state)
+        return {"result": result}
