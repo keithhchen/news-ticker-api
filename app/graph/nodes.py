@@ -2,7 +2,7 @@ from langgraph.types import StreamWriter
 from typing import TypedDict, Annotated, TypeVar
 import logging
 from langchain_core.runnables import RunnableLambda
-from app.config import gpt4o, deepseek
+from app.config import gpt4o, deepseek, deepseek_openrouter
 from .prompts import (
      SUMMARY_PROMPT,
      CONTEXT_TIME_PROMPT,
@@ -63,20 +63,20 @@ class State(TypedDict):
 
 def create_node_functions():
     # Create processing chains
-    summary_chain = SUMMARY_PROMPT | deepseek
-    context_time_chain = CONTEXT_TIME_PROMPT | deepseek
-    context_space_chain = CONTEXT_SPACE_PROMPT | deepseek
-    analyst_macro_chain = ANALYST_MACRO_PROMPT | deepseek
-    analyst_industry_chain = ANALYST_INDUSTRY_PROMPT | deepseek
-    analyst_company_chain = ANALYST_COMPANY_PROMPT | deepseek
-    analyst_trading_chain = ANALYST_TRADING_PROMPT | deepseek
-    warren_buffett_chain = WARREN_BUFFETT_PROMPT | deepseek
-    soros_chain = SOROS_PROMPT | deepseek
-    lynch_chain = LYNCH_PROMPT | deepseek
-    son_chain = SON_PROMPT | deepseek
-    leijun_chain = LEIJUN_PROMPT | deepseek
-    li_ka_shing_chain = LI_KA_SHING_PROMPT | deepseek
-    kai_fu_lee_chain = KAI_FU_LEE_PROMPT | deepseek
+    summary_chain = SUMMARY_PROMPT | deepseek_openrouter
+    context_time_chain = CONTEXT_TIME_PROMPT | deepseek_openrouter
+    context_space_chain = CONTEXT_SPACE_PROMPT | deepseek_openrouter
+    analyst_macro_chain = ANALYST_MACRO_PROMPT | deepseek_openrouter
+    analyst_industry_chain = ANALYST_INDUSTRY_PROMPT | deepseek_openrouter
+    analyst_company_chain = ANALYST_COMPANY_PROMPT | deepseek_openrouter
+    analyst_trading_chain = ANALYST_TRADING_PROMPT | deepseek_openrouter
+    warren_buffett_chain = WARREN_BUFFETT_PROMPT | deepseek_openrouter
+    soros_chain = SOROS_PROMPT | deepseek_openrouter
+    lynch_chain = LYNCH_PROMPT | deepseek_openrouter
+    son_chain = SON_PROMPT | deepseek_openrouter
+    leijun_chain = LEIJUN_PROMPT | deepseek_openrouter
+    li_ka_shing_chain = LI_KA_SHING_PROMPT | deepseek_openrouter
+    kai_fu_lee_chain = KAI_FU_LEE_PROMPT | deepseek_openrouter
 
 
     def start(state: State, writer: StreamWriter):
