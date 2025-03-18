@@ -517,3 +517,20 @@ SINGLE_SETH_PROMPT = ChatPromptTemplate.from_messages([
     {json_schema}
     ''')
 ])
+
+NAIVE_PROMPT = ChatPromptTemplate.from_messages([
+    ("system", '''
+    作为专业投资人，你将对新闻进行分析，并判断对指定股票的影响：
+    '''),
+    ("user", '''分析指令：
+    News: {news_input}
+    Stock: {ticker}
+    判断 News对 Stock 是利多还是利空，还是无关
+    输出要求：
+    - 严格使用JSON格式，直g接输出内容（不要代码块标记）
+    - 严格使用以下格式，只包括三个 key（利空、利多、无关）和对应的概率 value（0和1之间），不要包含分析、不要包含 ```json```，而是直接输出 json
+    如：利空: 0.6, 利多: 0.2, 无关: 0.1
+    schema:
+    {json_schema}
+    ''')
+])
