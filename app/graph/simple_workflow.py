@@ -1,7 +1,7 @@
 from langgraph.graph import Graph, END
 from typing import Dict
 from .prompts import SINGLE_SETH_PROMPT, SIMPLE_PROMPT_OUTPUT_SCHEMA
-from app.config import gpt4o
+from app.config import gpt4o, deepseek
 import json
 import logging
 

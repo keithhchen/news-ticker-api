@@ -11,7 +11,7 @@ load_dotenv()
 # Initialize LLMs using environment variables
 gpt4o = ChatOpenAI(
     model="gpt-4o",
-    temperature=0.7,
+    temperature=0.1,
     api_key=os.environ.get("OPENAI_API_KEY")
 )
 
@@ -25,6 +25,6 @@ deepseek = ChatOpenAI(
 deepseek_openrouter = ChatOpenAI(
     base_url="https://openrouter.ai/api/v1",
     model="deepseek/deepseek-chat",
-    temperature=0.7,
+    temperature=0.9,
     api_key=os.environ.get("OPENROUTER_API_KEY")
 ) 
