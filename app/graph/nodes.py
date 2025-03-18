@@ -90,7 +90,7 @@ def create_node_functions():
         end_time = time()
         elapsed_time = end_time - start_time
         writer({"node": "summary_node", "type": "end", "message": "核心内容提取完毕"})
-        writer({"node": "summary_node", "type": "output", "message": output})
+    #    writer({"node": "summary_node", "type": "output", "message": output})
         return {
             "summary": output,
             "summary_node_time": elapsed_time
@@ -103,7 +103,7 @@ def create_node_functions():
         end_time = time()
         elapsed_time = end_time - start_time
         writer({"node": "context_time", "type": "end", "message": "空间维度信息补充完毕"})
-        writer({"node": "context_time", "type": "output", "message": output})
+    #    writer({"node": "context_time", "type": "output", "message": output})
         return {
             "context_time_output": output,
             "context_time_time": elapsed_time
@@ -116,7 +116,7 @@ def create_node_functions():
         end_time = time()
         elapsed_time = end_time - start_time
         writer({"node": "context_space", "type": "end", "message": "时间维度信息补充完毕"})
-        writer({"node": "context_space", "type": "output", "message": output})
+    #    writer({"node": "context_space", "type": "output", "message": output})
         return {
             "context_space_output": output,
             "context_space_time": elapsed_time
@@ -134,7 +134,7 @@ def create_node_functions():
         end_time = time()
         elapsed_time = end_time - start_time
         writer({"node": "analyst_macro", "type": "end", "message": "经济学家分析完毕"})
-        writer({"node": "analyst_macro", "type": "output", "message": output})
+    #    writer({"node": "analyst_macro", "type": "output", "message": output})
         return {
             "analyst_macro_output": output,
             "analyst_macro_time": elapsed_time
@@ -152,7 +152,7 @@ def create_node_functions():
         end_time = time()
         elapsed_time = end_time - start_time
         writer({"node": "analyst_industry", "type": "end", "message": "钻研完毕"})
-        writer({"node": "analyst_industry", "type": "output", "message": output})
+    #    writer({"node": "analyst_industry", "type": "output", "message": output})
         return {
             "analyst_industry_output": output,
             "analyst_industry_time": elapsed_time
@@ -170,7 +170,7 @@ def create_node_functions():
         end_time = time()
         elapsed_time = end_time - start_time
         writer({"node": "analyst_company", "type": "end", "message": "研判完毕"})
-        writer({"node": "analyst_company", "type": "output", "message": output})
+    #    writer({"node": "analyst_company", "type": "output", "message": output})
         return {
             "analyst_company_output": output,
             "analyst_company_time": elapsed_time
@@ -188,7 +188,7 @@ def create_node_functions():
         end_time = time()
         elapsed_time = end_time - start_time
         writer({"node": "analyst_trading", "type": "end", "message": "交易员分析完毕"})
-        writer({"node": "analyst_trading", "type": "output", "message": output})
+    #    writer({"node": "analyst_trading", "type": "output", "message": output})
         return {
             "analyst_trading_output": output,
             "analyst_trading_time": elapsed_time

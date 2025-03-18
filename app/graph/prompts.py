@@ -200,7 +200,7 @@ WARREN_BUFFETT_PROMPT = ChatPromptTemplate.from_messages([
     
     结合分析资料，按照你的"价值投资铁律"分析：
     判断Summary对 Stock 的影响，并得出看多、看空或者无关的结论，
-    并输出第一人称分析过程，输出时首先抛出结论，然后论述理由。
+    并输出第一人称分析过程，输出时首先抛出结论，然后论述理由,不要使用 Markdown 格式。
     ''')
 ])
 
@@ -225,7 +225,7 @@ SOROS_PROMPT = ChatPromptTemplate.from_messages([
     Analyst_trading: {analyst_trading_output}
     Stock: {ticker}
     结合分析资料，按照你的一贯投资理念，判断Summary对 Stock 的影响，并得出看多、看空或者无关的结论，
-    并输出第一人称分析过程，输出时首先抛出结论，然后论述理由。
+    并输出第一人称分析过程，输出时首先抛出结论，然后论述理由,不要使用 Markdown 格式。
     ''')
 ])
 
@@ -249,7 +249,7 @@ LYNCH_PROMPT = ChatPromptTemplate.from_messages([
     Stock: {ticker}
 
     结合分析资料，按照你的一贯投资理念，判断对 Stock 的影响，并得出看多、看空或者无关的结论，
-    并输出第一人称分析过程，输出时首先抛出结论，然后论述理由。
+    并输出第一人称分析过程，输出时首先抛出结论，然后论述理由,不要使用 Markdown 格式。
     ''')
 ])
 
@@ -275,7 +275,7 @@ SON_PROMPT = ChatPromptTemplate.from_messages([
     Stock: {ticker}
     
     结合分析资料，按照你的一贯投资理念，判断对Stock的影响，并得出看多、看空或者无关的结论，
-    并输出第一人称分析过程，输出时首先抛出结论，然后论述理由。
+    并输出第一人称分析过程，输出时首先抛出结论，然后论述理由,不要使用 Markdown 格式。
     ''')
 ])
 
@@ -303,7 +303,7 @@ LEIJUN_PROMPT = ChatPromptTemplate.from_messages([
 
     结合分析资料，按照你的"互联网思维三原则"进行研判：
     判断Summary对 Stock 的影响，并得出看多、看空或者无关的结论，
-    并输出第一人称分析过程，输出时首先抛出结论，然后论述理由。
+    并输出第一人称分析过程，输出时首先抛出结论，然后论述理由,不要使用 Markdown 格式。
     ''')
 ])
 
@@ -330,7 +330,7 @@ LI_KA_SHING_PROMPT = ChatPromptTemplate.from_messages([
     Analyst_trading: {analyst_trading_output}
     Stock: {ticker}
 
-    依照你的商业哲学进行研判，并输出第一人称分析过程，输出时首先抛出结论，然后论述理由。
+    依照你的商业哲学进行研判，并输出第一人称分析过程，输出时首先抛出结论，然后论述理由,不要使用 Markdown 格式。
     ''')
 ])
 
@@ -357,7 +357,7 @@ KAI_FU_LEE_PROMPT = ChatPromptTemplate.from_messages([
     Analyst_trading: {analyst_trading_output}
     Stock: {ticker}
 
-    依照你的科技投资框架研判，并输出第一人称分析过程，输出时首先抛出结论，然后论述理由。
+    依照你的科技投资框架研判，并输出第一人称分析过程，输出时首先抛出结论，然后论述理由,不要使用 Markdown 格式。
     ''')
 ])
 
