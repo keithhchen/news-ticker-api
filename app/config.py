@@ -27,4 +27,11 @@ deepseek_openrouter = ChatOpenAI(
     model="deepseek/deepseek-chat",
     temperature=0.9,
     api_key=os.environ.get("OPENROUTER_API_KEY")
-) 
+)
+
+deepseek_openrouter_low = ChatOpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    model="deepseek/deepseek-chat",
+    temperature=0.01,
+    api_key=os.environ.get("OPENROUTER_API_KEY")
+)
