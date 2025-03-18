@@ -84,44 +84,43 @@ def create_node_functions():
         return state
  
     def summary_node(state: State, writer: StreamWriter, ):
-        writer({"node_start": "开始提取新闻核心内容"})
+        writer({"node": "summary_node", "type": "start", "message": "开始提取新闻核心内容"})
         start_time = time()
         output = summary_chain.invoke({"news_input": state["news_input"]}).content
         end_time = time()
         elapsed_time = end_time - start_time
-        writer({"node_end": "核心内容提取完毕"})
+        writer({"node": "summary_node", "type": "end", "message": "核心内容提取完毕"})
         return {
             "summary": output,
             "summary_node_time": elapsed_time
         }
 
     def context_time(state: State, writer: StreamWriter):
-        writer({"node_start": "进行空间维度信息补充"})
+        writer({"node": "context_time", "type": "start", "message": "进行空间维度信息补充"})
         start_time = time()
         output = context_time_chain.invoke({"news_input": state["news_input"]}).content
         end_time = time()
         elapsed_time = end_time - start_time
-        writer({"node_end": "context_time"})
-        writer({"node_end":"空间维度信息补充完毕"})
+        writer({"node": "context_time", "type": "end", "message": "空间维度信息补充完毕"})
         return {
             "context_time_output": output,
             "context_time_time": elapsed_time
         }
 
     def context_space(state: State, writer: StreamWriter):
-        writer({"node_start": "进行时间维度信息补充"})
+        writer({"node": "context_space", "type": "start", "message": "进行时间维度信息补充"})
         start_time = time()
         output = context_space_chain.invoke({"news_input": state["news_input"]}).content
         end_time = time()
         elapsed_time = end_time - start_time
-        writer({"node_end": "时间维度信息补充完毕"})
+        writer({"node": "context_space", "type": "end", "message": "时间维度信息补充完毕"})
         return {
             "context_space_output": output,
             "context_space_time": elapsed_time
         }
 
     def analyst_macro(state: State, writer: StreamWriter):
-        writer({"node_start": "经济学家开始分析"})
+        writer({"node": "analyst_macro", "type": "start", "message": "经济学家开始分析"})
         start_time = time()
         output = analyst_macro_chain.invoke({
             "summary": state["summary"],
@@ -131,14 +130,14 @@ def create_node_functions():
             }).content
         end_time = time()
         elapsed_time = end_time - start_time
-        writer({"node_end": "经济学家分析完毕"})
+        writer({"node": "analyst_macro", "type": "end", "message": "经济学家分析完毕"})
         return {
             "analyst_macro_output": output,
             "analyst_macro_time": elapsed_time
         }
 
     def analyst_industry(state: State, writer: StreamWriter):
-        writer({"node_start": "行业研究员正在钻研"})
+        writer({"node": "analyst_industry", "type": "start", "message": "行业研究员正在钻研"})
         start_time = time()
         output = analyst_industry_chain.invoke({
             "summary": state["summary"],
@@ -148,14 +147,14 @@ def create_node_functions():
             }).content
         end_time = time()
         elapsed_time = end_time - start_time
-        writer({"node_end": "钻研完毕"})
+        writer({"node": "analyst_industry", "type": "end", "message": "钻研完毕"})
         return {
             "analyst_industry_output": output,
             "analyst_industry_time": elapsed_time
         }
 
     def analyst_company(state: State, writer: StreamWriter):
-        writer({"node_start": "个股分析师正在进行公司研判"})
+        writer({"node": "analyst_company", "type": "start", "message": "个股分析师正在进行公司研判"})
         start_time = time()
         output = analyst_company_chain.invoke({
             "summary": state["summary"],
@@ -165,14 +164,14 @@ def create_node_functions():
             }).content
         end_time = time()
         elapsed_time = end_time - start_time
-        writer({"node_end": "研判完毕"})
+        writer({"node": "analyst_company", "type": "end", "message": "研判完毕"})
         return {
             "analyst_company_output": output,
             "analyst_company_time": elapsed_time
         }
 
     def analyst_trading(state: State, writer: StreamWriter):
-        writer({"node_start": "交易员开始分析"})
+        writer({"node": "analyst_trading", "type": "start", "message": "交易员开始分析"})
         start_time = time()
         output = analyst_trading_chain.invoke({
             "summary": state["summary"],
@@ -182,14 +181,14 @@ def create_node_functions():
             }).content
         end_time = time()
         elapsed_time = end_time - start_time
-        writer({"node_end": "交易员分析完毕"})
+        writer({"node": "analyst_trading", "type": "end", "message": "交易员分析完毕"})
         return {
             "analyst_trading_output": output,
             "analyst_trading_time": elapsed_time
         }
 
     def warren_buffett(state: State, writer: StreamWriter):
-        writer({"node_start": "巴菲特正在思考"})
+        writer({"node": "warren_buffett", "type": "start", "message": "巴菲特正在思考"})
         start_time = time()
         output = warren_buffett_chain.invoke({
             "summary": state["summary"],
@@ -201,14 +200,14 @@ def create_node_functions():
             }).content
         end_time = time()
         elapsed_time = end_time - start_time
-        writer({"node_end": "巴菲特心意已决"})
+        writer({"node": "warren_buffett", "type": "end", "message": "巴菲特心意已决"})
         return {
             "warren_buffett_output": output,
             "warren_buffett_time": elapsed_time
         }
 
     def soros(state: State, writer: StreamWriter):
-        writer({"node_start": "索罗斯思索中"})
+        writer({"node": "soros", "type": "start", "message": "索罗斯思索中"})
         start_time = time()
         output = soros_chain.invoke({
             "summary": state["summary"],
@@ -220,14 +219,14 @@ def create_node_functions():
             }).content
         end_time = time()
         elapsed_time = end_time - start_time
-        writer({"node_end": "索罗斯有了答案"})
+        writer({"node": "soros", "type": "end", "message": "索罗斯有了答案"})
         return {
             "soros_output": output,
             "soros_time": elapsed_time
         }
 
     def lynch(state: State, writer: StreamWriter):
-        writer({"node_start": "彼得林奇接过了分析师们的初步成果"})
+        writer({"node": "lynch", "type": "start", "message": "彼得林奇接过了分析师们的初步成果"})
         start_time = time()
         output = lynch_chain.invoke({
             "summary": state["summary"],
@@ -239,14 +238,14 @@ def create_node_functions():
             }).content
         end_time = time()
         elapsed_time = end_time - start_time
-        writer({"node_end": "彼得林奇做出了决定"})
+        writer({"node": "lynch", "type": "end", "message": "彼得林奇做出了决定"})
         return {
             "lynch_output": output,
             "lynch_time": elapsed_time
         }
 
     def son(state: State, writer: StreamWriter):
-        writer({"node_start": "孙正义开始翻看材料"})
+        writer({"node": "son", "type": "start", "message": "孙正义开始翻看材料"})
         start_time = time()
         output = son_chain.invoke({
             "summary": state["summary"],
@@ -258,14 +257,14 @@ def create_node_functions():
             }).content
         end_time = time()
         elapsed_time = end_time - start_time
-        writer({"node_end": "孙正义放下材料得出了结论"})
+        writer({"node": "son", "type": "end", "message": "孙正义放下材料得出了结论"})
         return {
             "son_output": output,
             "son_time": elapsed_time
         }
 
     def leijun(state: State, writer: StreamWriter):
-        writer({"node_start": "雷军正在研究 OK 不 OK"})
+        writer({"node": "leijun", "type": "start", "message": "雷军正在研究 OK 不 OK"})
         start_time = time()
         output = leijun_chain.invoke({
             "summary": state["summary"],
@@ -277,14 +276,14 @@ def create_node_functions():
             }).content
         end_time = time()
         elapsed_time = end_time - start_time
-        writer({"node_end": "雷军OK 了"})
+        writer({"node": "leijun", "type": "end", "message": "雷军OK 了"})
         return {
             "leijun_output": output,
             "leijun_time": elapsed_time
         }
 
     def li_ka_shing(state: State, writer: StreamWriter):
-        writer({"node_start": "李嘉诚开始校准手表"})
+        writer({"node": "li_ka_shing", "type": "start", "message": "李嘉诚开始校准手表"})
         start_time = time()
         output = li_ka_shing_chain.invoke({
             "summary": state["summary"],
@@ -296,14 +295,14 @@ def create_node_functions():
             }).content
         end_time = time()
         elapsed_time = end_time - start_time
-        writer({"node_end": "校准完毕"})
+        writer({"node": "li_ka_shing", "type": "end", "message": "校准完毕"})
         return {
             "li_ka_shing_output": output,
             "li_ka_shing_time": elapsed_time
         }
 
     def kai_fu_lee(state: State, writer: StreamWriter):
-        writer({"node_start": "李开复开始推演"})
+        writer({"node": "kai_fu_lee", "type": "start", "message": "李开复开始推演"})
         start_time = time()
         output = kai_fu_lee_chain.invoke({
             "summary": state["summary"],
@@ -315,7 +314,7 @@ def create_node_functions():
             }).content
         end_time = time()
         elapsed_time = end_time - start_time
-        writer({"node_end": "李开复推演完毕"})
+        writer({"node": "kai_fu_lee", "type": "end", "message": "李开复推演完毕"})
         return {
             "kai_fu_lee_output": output,
             "kai_fu_lee_time": elapsed_time
