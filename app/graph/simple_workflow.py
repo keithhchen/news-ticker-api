@@ -1,7 +1,7 @@
 from langgraph.graph import Graph, END
 from typing import Dict
 from .prompts import SINGLE_SETH_PROMPT, SIMPLE_PROMPT_OUTPUT_SCHEMA
-from app.config import gpt4o
+from app.config import gpt4o, deepseek, deepseek_openrouter_low
 import json
 import logging
 
@@ -9,7 +9,7 @@ logger = logging.getLogger("uvicorn")
 
 def create_simple_workflow():
     # Create processing chain
-    seth_chain = SINGLE_SETH_PROMPT | gpt4o
+    seth_chain = SINGLE_SETH_PROMPT | deepseek_openrouter_low
 
     def simple_analysis(state: Dict):
         output = seth_chain.invoke({

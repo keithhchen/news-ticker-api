@@ -206,7 +206,7 @@ WARREN_BUFFETT_PROMPT = ChatPromptTemplate.from_messages([
       "利多": 0.75, # 传统价值派倾向中庸概率
       "利空": 0.25,
       "无关": 0.0,
-      "原因": "分析过程"
+      "原因": "第一人称分析过程"
     }}
     ''')
 ])
@@ -237,7 +237,7 @@ SOROS_PROMPT = ChatPromptTemplate.from_messages([
       "利多": 0.95, # 反射性理论支持极端概率
       "利空": 0.05,
       "无关": 0.0,
-      "原因": "分析过程"
+      "原因": "第一人称分析过程"
     }}
     ''')
 ])
@@ -267,7 +267,7 @@ LYNCH_PROMPT = ChatPromptTemplate.from_messages([
       "利多": 0.8, # 成长股投资者偏好高概率
       "利空": 0.2,
       "无关": 0.0,
-      "原因": "分析过程"
+      "原因": "第一人称分析过程"
     }}
     ''')
 ])
@@ -299,7 +299,7 @@ SON_PROMPT = ChatPromptTemplate.from_messages([
       "利多": 0.99, # 技术狂人偏好极端概率
       "利空": 0.01,
       "无关": 0.0,
-      "原因": "分析过程"
+      "原因": "第一人称分析过程"
     }}
     ''')
 ])
@@ -334,7 +334,7 @@ LEIJUN_PROMPT = ChatPromptTemplate.from_messages([
       "利多": 0.9,  # 科技创业者倾向积极概率
       "利空": 0.1,
       "无关": 0.0,
-      "原因": "分析过程"
+      "原因": "第一人称分析过程"
     }}
     ''')
 ])
@@ -368,7 +368,7 @@ LI_KA_SHING_PROMPT = ChatPromptTemplate.from_messages([
       "利多": 0.6,  # 保守派倾向中等概率
       "利空": 0.3,
       "无关": 0.1,
-      "原因": "分析过程"
+      "原因": "第一人称分析过程"
     }}
     ''')
 ])
@@ -402,7 +402,7 @@ KAI_FU_LEE_PROMPT = ChatPromptTemplate.from_messages([
       "利多": 0.85,  # 技术乐观派倾向高概率
       "利空": 0.1,
       "无关": 0.05,
-      "原因": "分析过程"
+      "原因": "第一人称分析过程"
     }}
     ''')
 ])
@@ -510,7 +510,7 @@ SINGLE_SETH_PROMPT = ChatPromptTemplate.from_messages([
     [5/5 输出]
     根据前面的分析，判断 News对 Stock 是利多还是利空，还是无关
     输出要求：
-    - 严格使用JSON格式，直接输出内容（不要代码块标记）
+    - 严格使用JSON格式，直g接输出内容（不要代码块标记）
     - 严格使用以下格式，只包括三个 key（利空、利多、无关）和对应的概率 value（0和1之间），不要包含分析、不要包含 ```json```，而是直接输出 json
     如：利空: 0.6, 利多: 0.2, 无关: 0.1
     schema:
