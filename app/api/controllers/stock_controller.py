@@ -134,6 +134,7 @@ class NewsStockRequest(BaseModel):
 async def get_news_and_stock(
     request: NewsStockRequest,
     simple: bool = False,
+    streaming: bool = False
 ):
     """Get both news and stock information by their IDs
     Args:
@@ -178,7 +179,10 @@ async def get_news_and_stock(
     if simple:
         graph_result = await process_with_simple_graph(graph_input)
     else:
-        graph_result = await process_with_graph(graph_input)
+        if streaming: 
+            return await process_with_graph(graph_input, streaming=streaming)
+        else:
+            graph_result = await process_with_graph(graph_input)
     
     return {
         "news": news_data,
