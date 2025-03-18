@@ -9,7 +9,7 @@ logger = logging.getLogger("uvicorn")
 
 def create_simple_workflow():
     # Create processing chain
-    seth_chain = NAIVE_PROMPT | deepseek_openrouter_low
+    seth_chain = SINGLE_SETH_PROMPT | deepseek_openrouter_low
 
     def simple_analysis(state: Dict):
         output = seth_chain.invoke({
