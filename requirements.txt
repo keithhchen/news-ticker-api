@@ -10,3 +10,4 @@ supabase
 aiohttp>=3.8.0
 feedparser
 beautifulsoup4
+sentry-sdk[fastapi]>=1.39.1

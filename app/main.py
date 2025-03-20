@@ -1,9 +1,20 @@
 import os
 from dotenv import load_dotenv
-print(os.getenv("SUPABASE_KEY"))
+import sentry_sdk
+from sentry_sdk.integrations.fastapi import FastApiIntegration
 
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+
+# Initialize Sentry
+sentry_sdk.init(
+    dsn=os.getenv("SENTRY_DSN"),
+    integrations=[
+        FastApiIntegration()
+    ],
+    traces_sample_rate=1.0,
+    profiles_sample_rate=1.0,
+)
 
 from app.api.controllers.text_controller import router as text_router
 from app.api.controllers.graph_controller import router as graph_router
