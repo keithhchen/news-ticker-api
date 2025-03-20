@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # Initialize Sentry
 sentry_sdk.init(
-    dsn=os.getenv("SENTRY_DSN"),
+    dsn="https://2ded3c4c2b59666a9a497bca55a29c27@o4509010374754304.ingest.de.sentry.io/4509010400837712",
     integrations=[
         FastApiIntegration()
     ],
