@@ -114,13 +114,12 @@ RSS_FEEDS = [
     # "http://copy.hexun.com/rss.jsp",
     # "http://feedmaker.kindle4rss.com/feeds/CBNweekly2008.weixin.xml",
     "http://www.chinanews.com/rss/finance.xml",
-    "https://www.chinanews.com.cn/rss/world.xml",
     "http://xueqiu.com/hots/topic/rss",
     "https://feedx.net/rss/thepaper.xml",
     "http://www.eeo.com.cn/rss.xml",
     "https://rsshub.app/guancha/headline",
     "http://www.people.com.cn/rss/finance.xml",
-    "https://rsshub.app/cls/telegraph",
+
 ]
 
 def clean_html_content(html_content: str) -> str:
